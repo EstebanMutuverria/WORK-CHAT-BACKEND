@@ -41,6 +41,7 @@ app.use(cors({
 
 // Middleware para procesar cuerpos de solicitudes en formato JSON
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // Configuración y montaje de las rutas
 /**

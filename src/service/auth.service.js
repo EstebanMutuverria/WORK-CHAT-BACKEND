@@ -11,6 +11,7 @@ import ServerError from "../helper/serverError.helper.js"
 import userRepository from "../repository/user.repository.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import { getEmailTemplate } from "../helper/htmlTemplates.helper.js"
 
 //Registro:
 //Validar que el usuario no exista previamente en la DB (con el mismo mail), si existe dar error con status: 400
@@ -154,7 +155,6 @@ class AuthService {
     async sendVerifyEmail({ email, user_name }) {
         const verify_email_token = jwt.sign(
             {
-                //Primer objeto que se le pasa a sign() es el payload, en este caso es el mail del usuario a registrar
                 email: email,
                 user_name: user_name
             },
@@ -164,16 +164,18 @@ class AuthService {
             }
         )
 
+        const verificationURL = `${ENVIRONMENT.URL_BACKEND}/api/auth/verify-email?verify_email_token=${verify_email_token}`;
+
         await mailerTransporter.sendMail({
             from: ENVIRONMENT.MAIL_USER,
             to: email,
             subject: `Bienvenido ${user_name}, verifica tu cuenta`,
-            html: `
-            <h2>Bienvenido ${user_name}</h2>
-            <p>te has registrado correctamente, necesitamos verificar tu cuenta.</p>
-            <a href="${ENVIRONMENT.URL_BACKEND + `/api/auth/verify-email?verify_email_token=${verify_email_token}`}">hace click acá para verificarla</a>
-            <p>Si no reconoces este registro desestima el mail</p>
-            `
+            html: getEmailTemplate(
+                `¡Hola ${user_name}!`,
+                'Te has registrado correctamente en WorkChat. Para empezar a colaborar, necesitamos que verifiques tu dirección de correo electrónico.',
+                'Verificar mi cuenta',
+                verificationURL
+            )
         })
     }
 
@@ -187,49 +189,38 @@ class AuthService {
      * @returns {Promise<void>}
      */
     async resetPasswordRequest({ email }) {
-        try {
-            if (!email) {
-                throw new ServerError('El email es obligatorio', 400)
-            }
-
-            const user = await userRepository.getByEmail(email)
-            if (!user) {
-                throw new ServerError('El usuario no existe', 404)
-            }
-
-            const resetPasswordToken = jwt.sign(
-                {
-                    email
-                },
-                ENVIRONMENT.JWT_SECRET_KEY,
-                {
-                    expiresIn: '1d'
-                }
-            )
-
-            mailerTransporter.sendMail(
-                {
-                    from: ENVIRONMENT.MAIL_USER,
-                    to: email,
-                    subject: 'restablecimiento de contraseña',
-                    html: `
-                        <h1>Restablecimiento de contraseña</h1>
-                        <p>Se ha solicitado un restablecimiento de contraseña para tu cuenta.</p>
-                        <p>Si no has solicitado este cambio, por favor ignora este correo.</p>
-                        <a href="${ENVIRONMENT.URL_BACKEND + `/api/auth/reset-password-request?reset_password_token=${resetPasswordToken}`}">Haz clic aquí para restablecer tu contraseña</a>
-                        <span>Este enlace expirará en 1 día.</span> 
-                    `
-                }
-            )
-        } catch (error) {
-            if (error instanceof jwt.TokenExpiredError) {
-                throw new ServerError('El token de restablecimiento de contraseña ha expirado', 401)
-            } else if (error instanceof jwt.JsonWebTokenError) {
-                throw new ServerError('Token invalido', 401)
-            } else {
-                throw error
-            }
+        if (!email) {
+            throw new ServerError('El email es obligatorio', 400)
         }
+
+        const user = await userRepository.getByEmail(email)
+        if (!user) {
+            throw new ServerError('El usuario no existe', 404)
+        }
+
+        const resetPasswordToken = jwt.sign(
+            {
+                email
+            },
+            ENVIRONMENT.JWT_SECRET_KEY,
+            {
+                expiresIn: '1h' // Cambiado a 1h por seguridad, pero alineado con el mensaje anterior si se desea
+            }
+        )
+
+        const resetURL = `${ENVIRONMENT.URL_BACKEND}/api/auth/reset-password/${resetPasswordToken}`;
+
+        await mailerTransporter.sendMail({
+            from: ENVIRONMENT.MAIL_USER,
+            to: email,
+            subject: 'Restablecimiento de contraseña - WorkChat',
+            html: getEmailTemplate(
+                '¿Olvidaste tu contraseña?',
+                'Has solicitado un restablecimiento de contraseña para tu cuenta de WorkChat. Si no has sido tú, puedes ignorar este mensaje.',
+                'Restablecer mi contraseña',
+                resetURL
+            )
+        })
     }
 
     /**

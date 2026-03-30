@@ -5,6 +5,7 @@
  */
 
 import authService from "../service/auth.service.js"
+import { getStatusPage, getResetPasswordPage } from "../helper/htmlTemplates.helper.js"
 
 /**
  * @class AuthController
@@ -79,9 +80,21 @@ class AuthController {
 
             await authService.verify_email(verify_email_token)
 
-            response.status(200).send(`<h1>Mail verificado exitosamente</h1>`)
+            return response.status(200).send(getStatusPage(
+                true,
+                '¡Email Verificado!',
+                'Tu cuenta ha sido confirmada con éxito. Ya puedes empezar a usar WorkChat.',
+                'Ir a la aplicación',
+                'http://localhost:5173'
+            ))
         } catch (error) {
-            next(error)
+            return response.status(error.status || 500).send(getStatusPage(
+                false,
+                'Error de Verificación',
+                error.message || 'No se pudo verificar el correo electrónico.',
+                'Volver al inicio',
+                'http://localhost:5173'
+            ))
         }
     }
 
@@ -111,26 +124,41 @@ class AuthController {
 
     /**
      * @async
-     * @function resetPassword
-     * @description Recibe el token desde params de la URL y la nueva password desde body para aplicarlo a la cuenta del usuario.
-     * @param {Object} request - Parametros params y body de Request.
+     * @function renderResetPassword
+     * @description Renderiza la página para restablecer la contraseña.
+     * @param {Object} request - Request con reset_token en params.
      * @param {Object} response - Response.
-     * @returns {Promise<Object>}
      */
-    async resetPassword(request, response, next) {
+    async renderResetPassword(request, response) {
+        const { reset_token } = request.params
+        return response.status(200).send(getResetPasswordPage(reset_token))
+    }
+
+    /**
+     * @async
+     * @function resetPassword
+     * @description Recibe la nueva contraseña y el token para aplicarlo.
+     * @param {Object} request - Request.
+     * @param {Object} response - Response.
+     */
+    async resetPassword(request, response) {
+        const { reset_token } = request.params
         try {
             const { password } = request.body
-            const { reset_token } = request.params
             await authService.resetPassword({ password, reset_token })
-            return response.status(200).json(
-                {
-                    message: "Se ha restablecido la contraseña",
-                    ok: true,
-                    status: 200
-                }
-            )
+            
+            return response.status(200).send(getStatusPage(
+                true,
+                'Contraseña Actualizada',
+                'Tu contraseña ha sido restablecida correctamente. Ya puedes iniciar sesión con tus nuevas credenciales.',
+                'Iniciar Sesión',
+                'http://localhost:5173/login'
+            ))
         } catch (error) {
-            next(error)
+            return response.status(error.status || 500).send(getResetPasswordPage(
+                reset_token,
+                error.message || 'Error al restablecer la contraseña'
+            ))
         }
     }
 }

@@ -48,6 +48,16 @@ authRouter.post(
 )
 
 /**
+ * @route GET /api/auth/reset-password/:reset_token
+ * @description Muestra el formulario para restablecer la contraseña.
+ * @access Public
+ */
+authRouter.get(
+    '/reset-password/:reset_token',
+    authController.renderResetPassword
+)
+
+/**
  * @route POST /api/auth/reset-password/:reset_token
  * @description Endpoint para confirmar la nueva contraseña junto con su token de autorización.
  * @access Public
