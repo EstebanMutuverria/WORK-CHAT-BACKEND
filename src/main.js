@@ -21,8 +21,18 @@ connectMongoDB();
 const app = express()
 
 //CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
+const allowedOrigins = ['http://localhost:5173', 'https://work-chat-frontend.vercel.app'];
+
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: function (origin, callback) {
+        // Permitir solicitudes sin origen (como las de Postman o aplicaciones móviles)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            var msg = 'La política CORS para este sitio no permite acceso desde el origen especificado.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
 }));
 
 // Middleware para procesar cuerpos de solicitudes en formato JSON
