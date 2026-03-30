@@ -22,7 +22,7 @@ const app = express()
 
 //CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
 app.use(cors({
-    origin: '*'
+    origin: 'http://localhost:5173'
 }));
 
 // Middleware para procesar cuerpos de solicitudes en formato JSON
