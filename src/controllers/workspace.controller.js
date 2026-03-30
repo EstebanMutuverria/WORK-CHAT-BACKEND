@@ -19,19 +19,7 @@ class WorkspacesController {
 
 
         } catch (error) {
-            if (error instanceof ServerError) {
-                return response.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return response.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 }

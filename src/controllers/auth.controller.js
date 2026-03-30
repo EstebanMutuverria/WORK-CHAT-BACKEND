@@ -4,9 +4,6 @@
  * y retorna la respuesta HTTP (response) al cliente.
  */
 
-import { response } from "express"
-import userRepository from "../repository/user.repository.js"
-import ServerError from "../helper/serverError.helper.js"
 import authService from "../service/auth.service.js"
 
 /**
@@ -34,19 +31,7 @@ class AuthController {
                 status: 201
             })
         } catch (error) {
-            if (error instanceof ServerError) {
-                return response.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return response.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 
@@ -75,19 +60,7 @@ class AuthController {
             })
 
         } catch (error) {
-            if (error instanceof ServerError) {
-                return res.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return res.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 
@@ -108,19 +81,7 @@ class AuthController {
 
             response.status(200).send(`<h1>Mail verificado exitosamente</h1>`)
         } catch (error) {
-            if (error instanceof ServerError) {
-                return response.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return response.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 
@@ -144,19 +105,7 @@ class AuthController {
                 }
             )
         } catch (error) {
-            if (error instanceof ServerError) {
-                return response.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return response.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 
@@ -181,19 +130,7 @@ class AuthController {
                 }
             )
         } catch (error) {
-            if (error instanceof ServerError) {
-                return response.status(error.status).json({
-                    message: error.message,
-                    ok: false,
-                    status: error.status
-                })
-            } else {
-                return response.status(500).json({
-                    message: "Error interno",
-                    ok: false,
-                    status: 500
-                })
-            }
+            next(error)
         }
     }
 }

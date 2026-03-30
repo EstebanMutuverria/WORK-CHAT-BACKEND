@@ -12,6 +12,9 @@ import cors from 'cors'
 import memberWorkspacesRouter from "./routes/memberWorkspaces.route.js";
 import memberWorkspaceRepository from "./repository/memberWorkspace.repository.js";
 import workspaceRepository from "./repository/workspace.repository.js";
+import channelWorkspaceRepository from "./repository/channelWorkspace.repository.js";
+import messageChannelRepository from "./repository/messageChannel.repository.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 
 // Inicializa la conexión con MongoDB
@@ -56,6 +59,11 @@ app.use('/api/auth', authRouter)
 app.use('/api/workspaces', memberWorkspacesRouter)
 
 /**
+ * @description Manejo de errores.
+ */
+app.use(errorHandler)
+
+/**
  * @description Inicia el servidor de Express a escuchar peticiones en el puerto configurado en el entorno.
  */
 app.listen(ENVIRONMENT.PORT,
@@ -64,3 +72,6 @@ app.listen(ENVIRONMENT.PORT,
 
 /* workspaceRepository.create('test', 'lorem', 'lorem') */
 /* memberWorkspaceRepository.create('69c857d6f2b3e9c2a79a9701', '69c575edb55476903eb48ced', 'owner') */
+
+/* channelWorkspaceRepository.create('69c857d6f2b3e9c2a79a9701', 'test', 'lorem') */
+/* messageChannelRepository.create('test', '69c8583c4d643bffaa78a0c8', '69caa790d8be42fb74aac216') */
