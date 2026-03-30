@@ -1,15 +1,15 @@
 /**
  * @fileoverview Repositorio para la gestión de canales de los espacios de trabajo.
- * Contiene la clase que encapsula las operaciones de base de datos utilizando el modelo ChanellWorkspace.
+ * Contiene la clase que encapsula las operaciones de base de datos utilizando el modelo ChannelWorkspace.
  */
 
-import ChanellWorkspace from "../models/chanellWorkspace.model.js";
+import ChannelWorkspace from "../models/channelWorkspace.model.js";
 
 /**
- * @class ChanellWorkspaceRepository
+ * @class ChannelWorkspaceRepository
  * @description Clase que provee métodos para interactuar con la colección de canales en MongoDB.
  */
-class ChanellWorkspaceRepository {
+class ChannelWorkspaceRepository {
     /**
      * @async
      * @function create
@@ -20,7 +20,7 @@ class ChanellWorkspaceRepository {
      * @returns {Promise<void>}
      */
     async create(fk_id_workspace, title, description){
-        await ChanellWorkspace.create({
+        await ChannelWorkspace.create({
             fk_id_workspace : fk_id_workspace,
             title : title,
             description:description
@@ -35,7 +35,7 @@ class ChanellWorkspaceRepository {
      * @returns {Promise<void>}
      */
     async deleteById(id){
-        await ChanellWorkspace.findByIdAndDelete(id)
+        await ChannelWorkspace.findByIdAndDelete(id)
     }
 
     /**
@@ -46,7 +46,7 @@ class ChanellWorkspaceRepository {
      * @returns {Promise<Object>} El documento del canal encontrado.
      */
     async getById(id){
-        return await ChanellWorkspace.findById(id)
+        return await ChannelWorkspace.findById(id)
     }
 
     /**
@@ -57,15 +57,15 @@ class ChanellWorkspaceRepository {
      * @returns {Promise<Object>} El documento del canal con los datos actualizados.
      */
     async updateById(new_props){
-        const new_chanellWorkspace = await ChanellWorkspace.findByIdAndUpdate(new_props.id, new_props, {new:true})
+        const new_channelWorkspace = await ChannelWorkspace.findByIdAndUpdate(new_props.id, new_props, {new:true})
 
-        return new_chanellWorkspace
+        return new_channelWorkspace
     }
 }
 
 /**
- * @constant {ChanellWorkspaceRepository} chanellWorkspaceRepository
+ * @constant {ChannelWorkspaceRepository} channelWorkspaceRepository
  * @description Instancia del repositorio exportada por defecto para su uso en los servicios.
  */
-const chanellWorkspaceRepository = new ChanellWorkspaceRepository()
-export default chanellWorkspaceRepository
+const channelWorkspaceRepository = new ChannelWorkspaceRepository()
+export default channelWorkspaceRepository

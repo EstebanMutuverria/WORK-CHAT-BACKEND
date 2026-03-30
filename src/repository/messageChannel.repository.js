@@ -3,27 +3,27 @@
  * Contiene la clase encargada de realizar las operaciones sobre la colección de mensajes en MongoDB.
  */
 
-import MessageChanell from "../models/messageChanell.model.js";
+import MessageChannel from "../models/messageChannel.model.js";
 
 /**
- * @class MessageChanellRepository
+ * @class MessageChannelRepository
  * @description Clase que provee métodos para crear, obtener, actualizar y eliminar mensajes de los canales.
  */
-class MessageChanellRepository {
+class MessageChannelRepository {
     /**
      * @async
      * @function create
      * @description Crea y almacena un nuevo mensaje en la base de datos.
      * @param {string} content - El contenido del mensaje.
      * @param {string} fk_id_member - ID del miembro que envía el mensaje.
-     * @param {string} fk_id_chanell - ID del canal donde se envía.
+     * @param {string} fk_id_channel - ID del canal donde se envía.
      * @returns {Promise<void>}
      */
-    async create(content, fk_id_member, fk_id_chanell){
-        await MessageChanell.create({
+    async create(content, fk_id_member, fk_id_channel){
+        await MessageChannel.create({
             content : content,
             fk_id_member : fk_id_member,
-            fk_id_chanell : fk_id_chanell
+            fk_id_channel : fk_id_channel
         })
     }
 
@@ -35,7 +35,7 @@ class MessageChanellRepository {
      * @returns {Promise<void>}
      */
     async deleteById(id){
-        await MessageChanell.findByIdAndDelete(id)
+        await MessageChannel.findByIdAndDelete(id)
     }
 
     /**
@@ -46,7 +46,7 @@ class MessageChanellRepository {
      * @returns {Promise<Object>} El documento del mensaje.
      */
     async getById(id){
-        return await MessageChanell.findById(id)
+        return await MessageChannel.findById(id)
     }
 
     /**
@@ -57,15 +57,15 @@ class MessageChanellRepository {
      * @returns {Promise<Object>} El documento del mensaje modificado.
      */
     async updateById(new_props){
-        const new_messageChanell = await MessageChanell.findByIdAndUpdate(new_props.id, new_props, {new:true})
+        const new_messageChannel = await MessageChannel.findByIdAndUpdate(new_props.id, new_props, {new:true})
 
-        return new_messageChanell
+        return new_messageChannel
     }
 }
 
 /**
- * @constant {MessageChanellRepository} messageChanelRepository
+ * @constant {MessageChannelRepository} messageChannelRepository
  * @description Instancia del repositorio de mensajes exportada por defecto para su uso en toda la app.
  */
-const messageChanelRepository = new MessageChanellRepository()
-export default messageChanelRepository
+const messageChannelRepository = new MessageChannelRepository()
+export default messageChannelRepository

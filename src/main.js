@@ -23,6 +23,7 @@ const app = express()
 //CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
 const allowedOrigins = ['http://localhost:5173', 'https://work-chat-frontend.vercel.app'];
 
+//Configuración de CORS
 app.use(cors({
     origin: function (origin, callback) {
         // Permitir solicitudes sin origen (como las de Postman o aplicaciones móviles)
