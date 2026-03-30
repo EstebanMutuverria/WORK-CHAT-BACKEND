@@ -1,0 +1,115 @@
+/**
+ * @fileoverview Repositorio para la gestión de usuarios.
+ * Contiene la clase encargada de interactuar con la base de datos para la colección de Usuarios.
+ */
+
+import User from "../models/user.model.js";
+
+/**
+ * @class UserRepository
+ * @description Clase que expone los diferentes métodos para realizar operaciones CRUD y consultas específicas sobre usuarios.
+ */
+class UserRepository{
+    /**
+     * @async
+     * @function create
+     * @description Crea un nuevo usuario en la base de datos.
+     * @param {string} user_name - El nombre del usuario.
+     * @param {string} password - La contraseña encriptada del usuario.
+     * @param {string} email - El correo electrónico del usuario.
+     * @returns {Promise<void>}
+     */
+    async create(user_name, password, email){
+        await User.create({
+            user_name : user_name,
+            password : password,
+            email : email
+        })
+    }
+
+    /**
+     * @async
+     * @function deleteById
+     * @description Elimina un usuario por su ID de forma física.
+     * @param {string} id - ID del usuario a eliminar.
+     * @returns {Promise<void>}
+     */
+    async deleteById(id){
+        await User.findByIdAndDelete(id)
+    }
+
+    /**
+     * @async
+     * @function getById
+     * @description Obtiene el registro de un usuario mediante su ID.
+     * @param {string} id - ID del usuario.
+     * @returns {Promise<Object>} Documento del usuario encontrado.
+     */
+    async getById(id){
+        return await User.findById(id)
+    }
+
+    /**
+     * @async
+     * @function updateById
+     * @description Actualiza las propiedades de un usuario mediante su ID.
+     * @param {string} id - El ID del usuario a modificar.
+     * @param {Object} new_props - Objeto con las propiedades a modificar.
+     * @returns {Promise<Object>} El documento del usuario una vez aplicado el cambio.
+     */
+    async updateById(id,new_props){
+        const new_user = await User.findByIdAndUpdate
+        (
+            id,
+            new_props,
+            /* {new:true} ya no sirve */
+            {returnDocument:'after'}
+        )
+
+        return new_user
+    }
+
+    /**
+     * @async
+     * @function getByEmail
+     * @description Obtiene a un usuario basándose en su correo electrónico.
+     * @param {string} email - El email del usuario a buscar.
+     * @returns {Promise<Object>} El documento del usuario.
+     */
+    async getByEmail(email){
+        const user = await User.findOne({email:email})
+        return user
+    }
+
+    /**
+     * @async
+     * @function getUser
+     * @description Obtiene un solo usuario cualquiera de la colección (útil para validaciones o casos de prueba rápidos).
+     * @returns {Promise<Object>} El primer documento de usuario encontrado.
+     */
+    async getUser(){
+        const user = await User.findOne()
+        return user
+    }
+
+    /**
+     * @async
+     * @function getUserByEmailAndPassword
+     * @description Obtiene un usuario buscando por sus credenciales combinadas (email y contraseña).
+     * @param {string} email - Correo del usuario.
+     * @param {string} password - Contraseña del usuario.
+     * @returns {Promise<Object>} El usuario que coincida exactamente con las credenciales dadas.
+     */
+    async getUserByEmailAndPassword(email, password){
+        const user = await User.findOne({email:email, password:password})
+        return user
+    }
+
+}
+
+/**
+ * @constant {UserRepository} userRepository
+ * @description Instancia del repositorio de usuarios predeterminada, lista para su uso.
+ */
+const userRepository = new UserRepository()
+export default userRepository
