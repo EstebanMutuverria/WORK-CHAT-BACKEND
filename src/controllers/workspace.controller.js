@@ -1,8 +1,7 @@
-import ServerError from "../helper/serverError.helper.js"
 import memberWorkspaceService from "../service/memberWorkspace.service.js"
 
 class WorkspacesController {
-    async getWorkspaces(request, response) {
+    async getWorkspaces(request, response, next) {
         try {
             //Cliente consultante
             const user_id = request.user.id

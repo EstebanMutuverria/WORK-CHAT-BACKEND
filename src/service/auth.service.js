@@ -192,7 +192,7 @@ class AuthService {
                 throw new ServerError('El email es obligatorio', 400)
             }
 
-            const user = userRepository.getByEmail(email)
+            const user = await userRepository.getByEmail(email)
             if (!user) {
                 throw new ServerError('El usuario no existe', 404)
             }

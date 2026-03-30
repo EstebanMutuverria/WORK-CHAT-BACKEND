@@ -19,7 +19,7 @@ class AuthController {
      * @param {Object} response - Objeto Response de Express.
      * @returns {Promise<Object>} Promesa que se resuelve tras el envío del JSON al cliente.
      */
-    async userRegistration(request, response) {
+    async userRegistration(request, response, next) {
         try {
             const { user_name, password, email } = request.body
 
@@ -43,7 +43,7 @@ class AuthController {
      * @param {Object} res - Objeto Response de Express.
      * @returns {Promise<Object>} Promesa tras el envío del JSON final.
      */
-    async login(req, res) {
+    async login(req, res, next) {
         try {
             const { email, password } = req.body
 
@@ -73,7 +73,7 @@ class AuthController {
      * @param {Object} response - Objeto Response de Express.
      * @returns {Promise<Object>}
      */
-    async verify_email(request, response) {
+    async verify_email(request, response, next) {
         try {
             const { verify_email_token } = request.query
 
@@ -93,7 +93,7 @@ class AuthController {
      * @param {Object} response - Response.
      * @returns {Promise<Object>}
      */
-    async resetPasswordRequest(request, response) {
+    async resetPasswordRequest(request, response, next) {
         try {
             const { email } = request.body
             await authService.resetPasswordRequest({ email })
@@ -117,7 +117,7 @@ class AuthController {
      * @param {Object} response - Response.
      * @returns {Promise<Object>}
      */
-    async resetPassword(request, response) {
+    async resetPassword(request, response, next) {
         try {
             const { password } = request.body
             const { reset_token } = request.params
