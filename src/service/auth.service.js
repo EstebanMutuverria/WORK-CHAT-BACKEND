@@ -247,6 +247,9 @@ class AuthService {
 
             const passwordHashed = await bcrypt.hash(password, 12)
             const user_updated = await userRepository.updateById(user._id, { password: passwordHashed })
+
+            console.log(user_updated)
+
             if (!user_updated) {
                 throw new ServerError('No fue posible actualizar el usuario', 400)
             }

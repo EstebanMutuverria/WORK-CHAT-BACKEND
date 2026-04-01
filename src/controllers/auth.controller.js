@@ -109,6 +109,9 @@ class AuthController {
     async resetPasswordRequest(request, response, next) {
         try {
             const { email } = request.body
+
+            console.log('1. PIDIENDO RESET DE CONTRASEÑA DE: ', request.body)
+
             await authService.resetPasswordRequest({ email })
             return response.status(200).json(
                 {
@@ -144,9 +147,11 @@ class AuthController {
     async resetPassword(request, response) {
         const { reset_token } = request.params
         try {
+            console.log('2. TOKEN RECIBIDO POR PARAMS: ', reset_token)
+            console.log('3. BODY RECIBIDO: ', request.body)
             const { password } = request.body
             await authService.resetPassword({ password, reset_token })
-            
+
             return response.status(200).send(getStatusPage(
                 true,
                 'Contraseña Actualizada',
@@ -155,6 +160,7 @@ class AuthController {
                 'http://localhost:5173/login'
             ))
         } catch (error) {
+            console.error('ERROR AL INTENTAR RESTABLECER LA CONTRASEÑA: ', error)
             return response.status(error.status || 500).send(getResetPasswordPage(
                 reset_token,
                 error.message || 'Error al restablecer la contraseña'

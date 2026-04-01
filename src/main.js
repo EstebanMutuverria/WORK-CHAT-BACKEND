@@ -24,7 +24,7 @@ connectMongoDB();
 const app = express()
 
 //CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
-const allowedOrigins = ['http://localhost:5173', 'https://work-chat-frontend.vercel.app'];
+const allowedOrigins = [ENVIRONMENT.URL_FRONTEND, ENVIRONMENT.URL_FRONTEND_DEPLOYED, ENVIRONMENT.URL_BACKEND];
 
 //Configuración de CORS
 app.use(cors({
