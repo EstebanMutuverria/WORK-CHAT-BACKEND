@@ -1,6 +1,6 @@
 import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
 
-class WorkspaceService {
+class MemberWorkspaceService {
     async getWorkspaces(user_id) {
         //traer la lista de espacios de trabajo relacionados a el usuario logueado
         const workspacesList = await memberWorkspaceRepository.getWorkspaceListByUserId(user_id)
@@ -9,5 +9,5 @@ class WorkspaceService {
     }
 }
 
-const memberWorkspaceService = new WorkspaceService()
+const memberWorkspaceService = new MemberWorkspaceService()
 export default memberWorkspaceService
