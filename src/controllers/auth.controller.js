@@ -86,7 +86,7 @@ class AuthController {
                 '¡Email Verificado!',
                 'Tu cuenta ha sido confirmada con éxito. Ya puedes empezar a usar WorkChat.',
                 'Ir a la aplicación',
-                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
+                `${ENVIRONMENT.FRONTEND_URL}/login`
             ))
         } catch (error) {
             return response.status(error.status || 500).send(getStatusPage(
@@ -94,7 +94,7 @@ class AuthController {
                 'Error de Verificación',
                 error.message || 'No se pudo verificar el correo electrónico.',
                 'Volver al inicio',
-                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
+                `${ENVIRONMENT.FRONTEND_URL}/login`
             ))
         }
     }
@@ -158,7 +158,7 @@ class AuthController {
                 'Contraseña Actualizada',
                 'Tu contraseña ha sido restablecida correctamente. Ya puedes iniciar sesión con tus nuevas credenciales.',
                 'Iniciar Sesión',
-                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
+                `${ENVIRONMENT.FRONTEND_URL}/login`
             ))
         } catch (error) {
             console.error('ERROR AL INTENTAR RESTABLECER LA CONTRASEÑA: ', error)

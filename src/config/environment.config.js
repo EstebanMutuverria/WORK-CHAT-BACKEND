@@ -24,7 +24,11 @@ const ENVIRONMENT = {
     URL_BACKEND: process.env.URL_BACKEND,
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
     URL_FRONTEND: process.env.URL_FRONTEND,
-    URL_FRONTEND_DEPLOYED: process.env.URL_FRONTEND_DEPLOYED
+    URL_FRONTEND_DEPLOYED: process.env.URL_FRONTEND_DEPLOYED,
+    // Elegimos la mejor URL basada en si estamos en desarrollo o producción
+    get FRONTEND_URL() {
+        return process.env.NODE_ENV === 'production' ? this.URL_FRONTEND_DEPLOYED : (this.URL_FRONTEND || this.URL_FRONTEND_DEPLOYED);
+    }
 }
 
 export default ENVIRONMENT

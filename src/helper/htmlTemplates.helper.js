@@ -78,7 +78,10 @@ export const getStatusPage = (isSuccess, title, message, buttonText, buttonLink)
         p { color: #616061; line-height: 1.6; margin-bottom: 32px; font-size: 16px; }
         .btn { background: #4A154B; color: white !important; border: none; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s; cursor: pointer; width: 100%; box-sizing: border-box; font-size: 16px; }
         .btn:hover { background: #611f69; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(74, 21, 75, 0.3); }
+        .countdown { margin-top: 20px; font-size: 14px; color: #7d7d7d; font-weight: 500; }
+        .countdown span { font-weight: 700; color: #4A154B; }
     </style>
+    <meta http-equiv="refresh" content="5;url=${buttonLink}">
 </head>
 <body>
     <div class="card">
@@ -90,7 +93,20 @@ export const getStatusPage = (isSuccess, title, message, buttonText, buttonLink)
         <h1>${title}</h1>
         <p>${message}</p>
         <a href="${buttonLink}" class="btn">${buttonText}</a>
+        <div class="countdown">Serás redirigido automáticamente en <span id="timer">5</span> segundos...</div>
     </div>
+    <script>
+        let seconds = 5;
+        const countdownEl = document.getElementById('timer');
+        const interval = setInterval(() => {
+            seconds--;
+            countdownEl.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(interval);
+                window.location.href = '${buttonLink}';
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
 `;
