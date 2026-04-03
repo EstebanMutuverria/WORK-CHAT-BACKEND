@@ -20,11 +20,13 @@ class MemberWorkspacerepository {
      * @returns {Promise<void>}
      */
     async create(fk_id_workspace, fk_id_user, role) {
-        await MemberWorkspace.create({
+        const memberWorkspace_created = await MemberWorkspace.create({
             fk_id_workspace: fk_id_workspace,
             fk_id_user: fk_id_user,
             role: role
         })
+
+        return memberWorkspace_created
     }
 
     /**
@@ -119,6 +121,11 @@ class MemberWorkspacerepository {
         )
 
         return workspaces_mapped
+    }
+
+    async getUserByWorkspaceIdAndUserId(workspace_id, user_id) {
+        const member = await MemberWorkspace.find({ fk_id_workspace: workspace_id, fk_id_user: user_id })
+        return member
     }
 
 }

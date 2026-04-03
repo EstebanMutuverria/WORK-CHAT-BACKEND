@@ -11,4 +11,10 @@ memberWorkspacesRouter.get
 
     )
 
+memberWorkspacesRouter.post(
+    '/',
+    authMiddleware,
+    workspaceController.createWorkspace
+)
+
 export default memberWorkspacesRouter

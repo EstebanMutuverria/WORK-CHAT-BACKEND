@@ -20,11 +20,12 @@ class WorkspaceRepository {
      * @returns {Promise<void>}
      */
     async create(title, description, url_image) {
-        await Workspace.create({
+        const workspace_created = await Workspace.create({
             title: title,
             description: description,
             url_image: url_image
         })
+        return workspace_created
     }
 
     /**

@@ -85,7 +85,7 @@ class AuthController {
                 '¡Email Verificado!',
                 'Tu cuenta ha sido confirmada con éxito. Ya puedes empezar a usar WorkChat.',
                 'Ir a la aplicación',
-                'http://localhost:5173'
+                'http://localhost:5173/login'
             ))
         } catch (error) {
             return response.status(error.status || 500).send(getStatusPage(
@@ -93,7 +93,7 @@ class AuthController {
                 'Error de Verificación',
                 error.message || 'No se pudo verificar el correo electrónico.',
                 'Volver al inicio',
-                'http://localhost:5173'
+                'http://localhost:5173/login'
             ))
         }
     }

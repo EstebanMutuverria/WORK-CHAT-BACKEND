@@ -1,4 +1,5 @@
 import memberWorkspaceService from "../service/memberWorkspace.service.js"
+import workspaceService from "../service/workspace.service.js"
 
 class WorkspacesController {
     async getWorkspaces(request, response, next) {
@@ -17,6 +18,24 @@ class WorkspacesController {
             })
 
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async createWorkspace(request, response, next) {
+        try {
+            const { title, description, url_image } = request.body
+            const user = request.user
+
+            const workspace_created = await workspaceService.create(title, description, url_image, user.id)
+
+            return response.status(201).json({
+                message: "Workspace creado correctamente",
+                ok: true,
+                status: 201,
+                data: { workspace_created }
+            })
         } catch (error) {
             next(error)
         }
