@@ -6,6 +6,7 @@
 
 import authService from "../service/auth.service.js"
 import { getStatusPage, getResetPasswordPage } from "../helper/htmlTemplates.helper.js"
+import ENVIRONMENT from "../config/environment.config.js"
 
 /**
  * @class AuthController
@@ -85,7 +86,7 @@ class AuthController {
                 '¡Email Verificado!',
                 'Tu cuenta ha sido confirmada con éxito. Ya puedes empezar a usar WorkChat.',
                 'Ir a la aplicación',
-                'http://localhost:5173/login'
+                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
             ))
         } catch (error) {
             return response.status(error.status || 500).send(getStatusPage(
@@ -93,7 +94,7 @@ class AuthController {
                 'Error de Verificación',
                 error.message || 'No se pudo verificar el correo electrónico.',
                 'Volver al inicio',
-                'http://localhost:5173/login'
+                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
             ))
         }
     }
@@ -157,7 +158,7 @@ class AuthController {
                 'Contraseña Actualizada',
                 'Tu contraseña ha sido restablecida correctamente. Ya puedes iniciar sesión con tus nuevas credenciales.',
                 'Iniciar Sesión',
-                'http://localhost:5173/login'
+                `${ENVIRONMENT.URL_FRONTEND_DEPLOYED}/login`
             ))
         } catch (error) {
             console.error('ERROR AL INTENTAR RESTABLECER LA CONTRASEÑA: ', error)
