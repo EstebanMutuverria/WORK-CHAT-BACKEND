@@ -89,7 +89,7 @@ export const getStatusPage = (isSuccess, title, message, buttonText, buttonLink)
         </div>
         <h1>${title}</h1>
         <p>${message}</p>
-        <Link to="${buttonLink}" className="btn">${buttonText}</Link>
+        <a href="${buttonLink}" class="btn">${buttonText}</a>
     </div>
 </body>
 </html>
