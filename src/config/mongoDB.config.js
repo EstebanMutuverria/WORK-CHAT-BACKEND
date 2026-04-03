@@ -14,7 +14,8 @@ import ENVIRONMENT from "./environment.config.js"
  */
 export async function connectMongoDB(){
     try {
-        await mongoose.connect(ENVIRONMENT.MONGO_DB_CONNECTION_STRING)
+        const connectionString = ENVIRONMENT.MONGO_DB_CONNECTION_STRING.trim();
+        await mongoose.connect(connectionString)
         console.log('connected to mongoDB')
     } catch (error) {
         console.error("Not connected to mongoDB", error)
