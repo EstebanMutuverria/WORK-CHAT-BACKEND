@@ -89,7 +89,11 @@ class MemberWorkspacerepository {
             .populate("fk_id_user", "user_name email")
             .populate("fk_id_workspace", "title description")
 
-        const member_list_mapped = member_list.map((member) => {
+        const validMembers = member_list.filter(
+             (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
+        )
+
+        const member_list_mapped = validMembers.map((member) => {
             return {
                 member_id: member._id,
                 member_role: member.role,
@@ -109,16 +113,26 @@ class MemberWorkspacerepository {
     async getWorkspaceListByUserId(user_id) {
         const workspacesList = await MemberWorkspace.find({ fk_id_user: user_id })
             .populate('fk_id_workspace', 'title description')
+            .populate('fk_id_user', 'user_name email')
 
-        const workspaces_mapped = workspacesList.map(
+        // Filter out any orphaned records where the workspace or user was deleted
+        const validWorkspaces = workspacesList.filter(
+            (workspace) => workspace.fk_id_workspace !== null && workspace.fk_id_user !== null
+        )
+
+        const workspaces_mapped = validWorkspaces.map(
             (workspace) => {
                 return {
                     workspace_id: workspace.fk_id_workspace._id,
                     workspace_title: workspace.fk_id_workspace.title,
-                    workspace_description: workspace.fk_id_workspace.description
+                    workspace_description: workspace.fk_id_workspace.description,
+                    user_name: workspace.fk_id_user.user_name,
+                    user_email: workspace.fk_id_user.email
                 }
             }
         )
+
+        console.log("Workspaces Mapped: ", workspaces_mapped)
 
         return workspaces_mapped
     }
