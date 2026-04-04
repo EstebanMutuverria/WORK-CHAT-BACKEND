@@ -92,7 +92,6 @@ export const getStatusPage = (isSuccess, title, message, buttonText, buttonLink)
         </div>
         <h1>${title}</h1>
         <p>${message}</p>
-        <a href="${buttonLink}" class="btn">${buttonText}</a>
         <div class="countdown">Serás redirigido automáticamente en <span id="timer">5</span> segundos...</div>
     </div>
     <script>

@@ -12,9 +12,9 @@ import ENVIRONMENT from "./environment.config.js"
  * @returns {Promise<void>} Promesa que se resuelve cuando la base de datos se conecta correctamente.
  * En caso de error, captura la excepción y la imprime en consola.
  */
-export async function connectMongoDB(){
+export async function connectMongoDB() {
     try {
-        const connectionString = ENVIRONMENT.MONGO_DB_CONNECTION_STRING.trim();
+        const connectionString = ENVIRONMENT.MONGO_DB_CONNECTION_STRING;
         await mongoose.connect(connectionString)
         console.log('connected to mongoDB')
     } catch (error) {
