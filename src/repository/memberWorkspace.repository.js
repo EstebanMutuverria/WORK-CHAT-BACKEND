@@ -90,7 +90,7 @@ class MemberWorkspacerepository {
             .populate("fk_id_workspace", "title description")
 
         const validMembers = member_list.filter(
-             (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
+            (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
         )
 
         const member_list_mapped = validMembers.map((member) => {
@@ -140,6 +140,11 @@ class MemberWorkspacerepository {
     async getUserByWorkspaceIdAndUserId(workspace_id, user_id) {
         const member = await MemberWorkspace.find({ fk_id_workspace: workspace_id, fk_id_user: user_id })
         return member
+    }
+
+    async getWorkspaceByUserAndWorkspaceId(workspace_id, user_id) {
+        const workspace = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
+        return workspace
     }
 
 }

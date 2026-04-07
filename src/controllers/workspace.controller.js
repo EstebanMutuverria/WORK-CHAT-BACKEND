@@ -42,6 +42,24 @@ class WorkspacesController {
             next(error)
         }
     }
+
+    async getWorkspacebyId(request, response, next) {
+        const workspace_id = request.params.workspace_id
+        const user_id = request.user.id
+
+        try {
+            const workspace = await workspaceService.getById(workspace_id, user_id)
+            return response.status(200).json({
+                message: "Workspace obtenido correctamente",
+                ok: true,
+                status: 200,
+                data: { workspace }
+            })
+        } catch (error) {
+            next(error)
+            console.error("Error al obtener el workspace: ", error)
+        }
+    }
 }
 
 const workspacesController = new WorkspacesController()

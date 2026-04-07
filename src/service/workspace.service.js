@@ -1,4 +1,5 @@
 import ServerError from "../helper/serverError.helper.js";
+import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
 import workspaceRepository from "../repository/workspace.repository.js";
 import memberWorkspaceService from "./memberWorkspace.service.js";
 
@@ -14,6 +15,14 @@ class WorkspaceService {
             'owner'
         )
         return workspace_created
+    }
+
+    async getById(workspace_id, user_id) {
+        const workspace = await memberWorkspaceRepository.getWorkspaceByUserAndWorkspaceId(workspace_id, user_id)
+        if (!workspace || !user_id) {
+            throw new ServerError('No tienes permiso para acceder a este workspace', 403)
+        }
+        return workspace
     }
 
 }
