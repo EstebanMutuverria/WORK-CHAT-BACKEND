@@ -87,7 +87,8 @@ class MemberWorkspacerepository {
     async getMemberList(work_space_id) {
         const member_list = await MemberWorkspace.find({ fk_id_workspace: work_space_id })
             .populate("fk_id_user", "user_name email")
-            .populate("fk_id_workspace", "title description")
+        //TODO: Eliminar si no se rompe nada
+        //.populate("fk_id_workspace", "title description")
 
         const validMembers = member_list.filter(
             (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
@@ -102,8 +103,9 @@ class MemberWorkspacerepository {
                 user_name: member.fk_id_user.user_name,
                 user_email: member.fk_id_user.email,
 
-                workspace_title: member.fk_id_workspace.title,
-                workspace_description: member.fk_id_workspace.description
+                //TODO: Eliminar si no se rompe nada
+                /*                 workspace_title: member.fk_id_workspace.title,
+                                workspace_description: member.fk_id_workspace.description */
             }
         })
         console.log("Member List: ", member_list_mapped)
@@ -144,7 +146,14 @@ class MemberWorkspacerepository {
 
     async getWorkspaceByUserAndWorkspaceId(workspace_id, user_id) {
         const workspace = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
-        return workspace
+            .populate('fk_id_workspace', 'title description url_image')
+        const workspaceMapped = {
+            workspace_id: workspace.fk_id_workspace._id,
+            workspace_title: workspace.fk_id_workspace.title,
+            workspace_description: workspace.fk_id_workspace.description,
+            workspace_url_image: workspace.fk_id_workspace.url_image
+        }
+        return workspaceMapped
     }
 
 }

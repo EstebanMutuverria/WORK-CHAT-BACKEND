@@ -1,3 +1,4 @@
+import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js"
 import memberWorkspaceService from "../service/memberWorkspace.service.js"
 import workspaceService from "../service/workspace.service.js"
 
@@ -49,11 +50,15 @@ class WorkspacesController {
 
         try {
             const workspace = await workspaceService.getById(workspace_id, user_id)
+            const members = await memberWorkspaceRepository.getMemberList(workspace_id)
             return response.status(200).json({
                 message: "Workspace obtenido correctamente",
                 ok: true,
                 status: 200,
-                data: { workspace }
+                data: {
+                    workspace: workspace,
+                    members: members
+                }
             })
         } catch (error) {
             next(error)
