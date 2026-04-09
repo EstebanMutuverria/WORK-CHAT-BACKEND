@@ -4,6 +4,7 @@
  */
 
 import mongoose from "mongoose"
+import AVILABLE_ROLES from "../constants/roles.constants.js"
 
 /**
  * @constant {mongoose.Schema} memberWorkspaceSchema
@@ -14,29 +15,29 @@ import mongoose from "mongoose"
  * @property {Date} created_at - Fecha en la que el usuario fue agregado como miembro. Por defecto es la fecha actual.
  */
 const memberWorkspaceSchema = new mongoose.Schema({
-    fk_id_workspace:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Workspace",
-        required:true
+    fk_id_workspace: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Workspace",
+        required: true
     },
-    fk_id_user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    fk_id_user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
-    role:{
-        type:String,
-        enum:[
-            "owner",
-            "user",
-            "admin"
+    role: {
+        type: String,
+        enum: [
+            AVILABLE_ROLES.OWNER,
+            AVILABLE_ROLES.USER,
+            AVILABLE_ROLES.ADMIN
         ],
-        default: "user"
+        default: AVILABLE_ROLES.USER
     },
-    created_at:{
-        type:Date,
-        required:true,
-        default:Date.now
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 })
 

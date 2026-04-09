@@ -15,6 +15,7 @@ import workspaceRepository from "./repository/workspace.repository.js";
 import channelWorkspaceRepository from "./repository/channelWorkspace.repository.js";
 import messageChannelRepository from "./repository/messageChannel.repository.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
 
 
 // Inicializa la conexión con MongoDB
@@ -24,7 +25,11 @@ connectMongoDB();
 const app = express()
 
 //CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
-const allowedOrigins = [ENVIRONMENT.URL_FRONTEND, ENVIRONMENT.URL_FRONTEND_DEPLOYED, ENVIRONMENT.URL_BACKEND];
+const allowedOrigins = [
+    ENVIRONMENT.URL_FRONTEND,
+    ENVIRONMENT.URL_FRONTEND_DEPLOYED,
+    ENVIRONMENT.URL_BACKEND
+];
 
 //Configuración de CORS
 app.use(cors({
@@ -62,6 +67,11 @@ app.use('/api/auth', authRouter)
 app.use('/api/workspaces', memberWorkspacesRouter)
 
 /**
+ * @description Montaje de la ruta relacionada a Listado de canales del workspace logueado.
+ */
+app.use('/api/workspaces/:workspace_id/channels', channelWorkspaceRouter)
+
+/**
  * @description Manejo de errores.
  */
 app.use(errorHandler)
@@ -76,5 +86,5 @@ app.listen(ENVIRONMENT.PORT,
 /* workspaceRepository.create('test', 'lorem', 'lorem') */
 /* memberWorkspaceRepository.create('69c857d6f2b3e9c2a79a9701', '69c575edb55476903eb48ced', 'owner') */
 
-/* channelWorkspaceRepository.create('69c857d6f2b3e9c2a79a9701', 'test', 'lorem') */
+/* channelWorkspaceRepository.create('69d3f4b6c59a6d0c4e7f331a', 'PWA Channel', 'lorem') */
 /* messageChannelRepository.create('test', '69c8583c4d643bffaa78a0c8', '69caa790d8be42fb74aac216') */

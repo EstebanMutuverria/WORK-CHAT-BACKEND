@@ -13,6 +13,7 @@ function verifyMemberWorkspace(valid_roles = []) {
             }
 
             request.member = member
+            console.log(member.role)
 
             if (valid_roles.length > 0 && !valid_roles.includes(member.role)) {
                 throw new ServerError('No tienes permiso para realizar esta accion', 403)

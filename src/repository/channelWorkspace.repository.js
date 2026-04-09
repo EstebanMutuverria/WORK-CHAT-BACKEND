@@ -19,12 +19,13 @@ class ChannelWorkspaceRepository {
      * @param {string} description - Descripción del canal.
      * @returns {Promise<void>}
      */
-    async create(fk_id_workspace, title, description){
-        await ChannelWorkspace.create({
-            fk_id_workspace : fk_id_workspace,
-            title : title,
-            description:description
+    async create(workspace_id, title, description) {
+        const channel_created = await ChannelWorkspace.create({
+            fk_id_workspace: workspace_id,
+            title: title,
+            description: description
         })
+        return channel_created
     }
 
     /**
@@ -34,7 +35,7 @@ class ChannelWorkspaceRepository {
      * @param {string} id - ID del canal a eliminar.
      * @returns {Promise<void>}
      */
-    async deleteById(id){
+    async deleteById(id) {
         await ChannelWorkspace.findByIdAndDelete(id)
     }
 
@@ -45,8 +46,8 @@ class ChannelWorkspaceRepository {
      * @param {string} id - ID del canal buscado.
      * @returns {Promise<Object>} El documento del canal encontrado.
      */
-    async getById(id){
-        return await ChannelWorkspace.findById(id)
+    async getById(id, workspace_id) {
+        return await ChannelWorkspace.findOne({ _id: id, fk_id_workspace: workspace_id })
     }
 
     /**
@@ -56,10 +57,15 @@ class ChannelWorkspaceRepository {
      * @param {Object} new_props - Objeto con las propiedades a actualizar, debe incluir el 'id' del canal.
      * @returns {Promise<Object>} El documento del canal con los datos actualizados.
      */
-    async updateById(new_props){
-        const new_channelWorkspace = await ChannelWorkspace.findByIdAndUpdate(new_props.id, new_props, {new:true})
+    async updateById(new_props) {
+        const new_channelWorkspace = await ChannelWorkspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
 
         return new_channelWorkspace
+    }
+
+    async getAll(workspace_id) {
+        const channels = await ChannelWorkspace.find({ fk_id_workspace: workspace_id })
+        return channels
     }
 }
 
