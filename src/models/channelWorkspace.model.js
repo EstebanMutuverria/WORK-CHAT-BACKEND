@@ -14,23 +14,28 @@ import mongoose from "mongoose"
  * @property {mongoose.Schema.Types.ObjectId} fk_id_workspace - Referencia al ID del espacio de trabajo al que pertenece. Es requerido.
  */
 const channelWorkspaceSchema = new mongoose.Schema({
-    title:{
-        type:String,
-        required:true
+    title: {
+        type: String,
+        required: true
     },
-    created_at:{
-        type:Date,
-        default:Date.now,
-        required:true
+    created_at: {
+        type: Date,
+        default: Date.now,
+        required: true
     },
-    description:{
-        type:String,
-        required:true
+    description: {
+        type: String,
+        required: true
     },
-    fk_id_workspace:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"workspace",
-        required:true
+    fk_id_workspace: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "workspace",
+        required: true
+    },
+    is_active: {
+        type: Boolean,
+        default: true,
+        required: true
     }
 })
 

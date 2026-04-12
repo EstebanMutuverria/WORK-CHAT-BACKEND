@@ -57,15 +57,19 @@ class ChannelWorkspaceRepository {
      * @param {Object} new_props - Objeto con las propiedades a actualizar, debe incluir el 'id' del canal.
      * @returns {Promise<Object>} El documento del canal con los datos actualizados.
      */
-    async updateById(new_props) {
-        const new_channelWorkspace = await ChannelWorkspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
-
-        return new_channelWorkspace
+    async updateById(id, title, description) {
+        const channel_updated = await ChannelWorkspace.findByIdAndUpdate(id, { title, description }, { new: true })
+        return channel_updated
     }
 
     async getAll(workspace_id) {
         const channels = await ChannelWorkspace.find({ fk_id_workspace: workspace_id })
         return channels
+    }
+
+    async deleteLogic(id) {
+        const channel_deleted = await ChannelWorkspace.findByIdAndUpdate(id, { is_active: false }, { new: true })
+        return channel_deleted
     }
 }
 
