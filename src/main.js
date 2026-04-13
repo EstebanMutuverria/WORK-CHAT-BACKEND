@@ -16,6 +16,7 @@ import channelWorkspaceRepository from "./repository/channelWorkspace.repository
 import messageChannelRepository from "./repository/messageChannel.repository.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
+import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.route.js";
 
 
 // Inicializa la conexión con MongoDB
@@ -70,6 +71,11 @@ app.use('/api/workspaces', memberWorkspacesRouter)
  * @description Montaje de la ruta relacionada a Listado de canales del workspace logueado.
  */
 app.use('/api/workspaces/:workspace_id/channels', channelWorkspaceRouter)
+
+/**
+ * @description Montaje de ruta relacionada a Listado de mensages de los canales de cada espacio de trabajo
+ */
+app.use('/api/workspaces/:workspace_id/channels/:channel_id', messagesChannelWorkspaceRouter)
 
 /**
  * @description Manejo de errores.

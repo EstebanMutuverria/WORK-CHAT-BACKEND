@@ -19,12 +19,13 @@ class MessageChannelRepository {
      * @param {string} fk_id_channel - ID del canal donde se envía.
      * @returns {Promise<void>}
      */
-    async create(content, fk_id_member, fk_id_channel){
-        await MessageChannel.create({
-            content : content,
-            fk_id_member : fk_id_member,
-            fk_id_channel : fk_id_channel
+    async create(content, fk_id_member, fk_id_channel) {
+        const message = await MessageChannel.create({
+            content: content,
+            fk_id_member: fk_id_member,
+            fk_id_channel: fk_id_channel
         })
+        return message
     }
 
     /**
@@ -34,7 +35,7 @@ class MessageChannelRepository {
      * @param {string} id - ID del mensaje a borrar.
      * @returns {Promise<void>}
      */
-    async deleteById(id){
+    async deleteById(id) {
         await MessageChannel.findByIdAndDelete(id)
     }
 
@@ -45,7 +46,7 @@ class MessageChannelRepository {
      * @param {string} id - ID del mensaje buscado.
      * @returns {Promise<Object>} El documento del mensaje.
      */
-    async getById(id){
+    async getById(id) {
         return await MessageChannel.findById(id)
     }
 
@@ -56,10 +57,15 @@ class MessageChannelRepository {
      * @param {Object} new_props - Objeto con los nuevos valores. Debe incluir la propiedad 'id'.
      * @returns {Promise<Object>} El documento del mensaje modificado.
      */
-    async updateById(new_props){
-        const new_messageChannel = await MessageChannel.findByIdAndUpdate(new_props.id, new_props, {new:true})
+    async updateById(new_props) {
+        const new_messageChannel = await MessageChannel.findByIdAndUpdate(new_props.id, new_props, { new: true })
 
         return new_messageChannel
+    }
+
+    async getByChannelId(id_channel) {
+        const messages = await MessageChannel.find({ fk_id_channel: id_channel })
+        return messages
     }
 }
 

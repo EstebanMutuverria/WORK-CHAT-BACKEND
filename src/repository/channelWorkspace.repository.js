@@ -46,8 +46,10 @@ class ChannelWorkspaceRepository {
      * @param {string} id - ID del canal buscado.
      * @returns {Promise<Object>} El documento del canal encontrado.
      */
-    async getById(id, workspace_id) {
-        return await ChannelWorkspace.findOne({ _id: id, fk_id_workspace: workspace_id })
+    async getById(channel_id) {
+        const channel = await ChannelWorkspace.findById(channel_id)
+        console.log('Canal: ', channel)
+        return channel
     }
 
     /**
