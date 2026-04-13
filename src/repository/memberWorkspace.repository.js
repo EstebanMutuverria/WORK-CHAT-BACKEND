@@ -108,7 +108,6 @@ class MemberWorkspacerepository {
                                 workspace_description: member.fk_id_workspace.description */
             }
         })
-        console.log("Member List: ", member_list_mapped)
         return member_list_mapped
     }
 
@@ -133,8 +132,6 @@ class MemberWorkspacerepository {
                 }
             }
         )
-
-        console.log("Workspaces Mapped: ", workspaces_mapped)
 
         return workspaces_mapped
     }

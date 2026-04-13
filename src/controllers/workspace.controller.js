@@ -7,11 +7,9 @@ class WorkspacesController {
         try {
             //Cliente consultante
             const user_id = request.user.id
-            console.log("User ID: ", user_id)
 
             //traer la lista de espacios de trabajo relacionados a el usuario logueado
             const workspacesList = await memberWorkspaceService.getWorkspaces(user_id)
-            console.log("Workspaces List: ", workspacesList)
 
             return response.status(200).json({
                 message: "Workspaces obtenidos correctamente",

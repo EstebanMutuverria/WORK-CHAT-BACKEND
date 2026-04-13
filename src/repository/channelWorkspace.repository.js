@@ -48,7 +48,6 @@ class ChannelWorkspaceRepository {
      */
     async getById(channel_id) {
         const channel = await ChannelWorkspace.findById(channel_id)
-        console.log('Canal: ', channel)
         return channel
     }
 
