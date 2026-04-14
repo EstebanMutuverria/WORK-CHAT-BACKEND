@@ -65,6 +65,26 @@ class MessagesChannelWorkspaceController {
             next(error)
         }
     }
+
+    async deleteMessageLogic(request, response, next) {
+        try {
+            const { message_id } = request.params
+            const message_deleted = await messagesChannelWorkspaceService.deleteMessageLogic(message_id)
+            return response.status(200).json(
+                {
+                    message: 'Mensaje elminado exitosamente',
+                    ok: true,
+                    status: 200,
+                    data: {
+                        message_deleted: message_deleted
+                    }
+                }
+            )
+
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 const messagesChannelWorkspaceController = new MessagesChannelWorkspaceController()

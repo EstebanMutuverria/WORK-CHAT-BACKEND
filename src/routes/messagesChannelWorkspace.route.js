@@ -16,6 +16,7 @@ messagesChannelWorkspaceRouter.post(
 messagesChannelWorkspaceRouter.get(
     '/message',
     authMiddleware,
+    verifyChannelMiddleware,
     verifyMemberWorkspace([]),
     messagesChannelWorkspaceController.getMessages
 )
@@ -23,8 +24,17 @@ messagesChannelWorkspaceRouter.get(
 messagesChannelWorkspaceRouter.delete(
     '/message/:message_id',
     authMiddleware,
+    verifyChannelMiddleware,
     verifyMemberWorkspace([]),
     messagesChannelWorkspaceController.deleteMessage
+)
+
+messagesChannelWorkspaceRouter.put(
+    '/message/:message_id',
+    authMiddleware,
+    verifyChannelMiddleware,
+    verifyMemberWorkspace([]),
+    messagesChannelWorkspaceController.deleteMessageLogic
 )
 
 export default messagesChannelWorkspaceRouter

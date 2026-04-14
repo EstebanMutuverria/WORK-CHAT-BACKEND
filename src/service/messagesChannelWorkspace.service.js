@@ -34,6 +34,15 @@ class MessagesChannelWorkspaceService {
         const message = await messageChannelRepository.deleteById(id)
         return message
     }
+
+    async deleteMessageLogic(id) {
+        if (!id) {
+            throw new ServerError('El id del mensaje es requerido', 400)
+        }
+
+        const message = await messageChannelRepository.deleteMessageLogic(id)
+        return message
+    }
 }
 
 const messagesChannelWorkspaceService = new MessagesChannelWorkspaceService()

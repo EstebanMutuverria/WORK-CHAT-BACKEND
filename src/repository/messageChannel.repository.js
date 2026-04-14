@@ -67,6 +67,11 @@ class MessageChannelRepository {
         const messages = await MessageChannel.find({ fk_id_channel: id_channel })
         return messages
     }
+
+    async deleteMessageLogic(id) {
+        const message_deleted = await MessageChannel.findByIdAndUpdate(id, { is_active: false }, { new: true })
+        return message_deleted
+    }
 }
 
 /**

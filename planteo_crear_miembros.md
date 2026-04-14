@@ -26,18 +26,3 @@ Revisar si el miembro esta en pendiente, si no esta pendiente NO DEJAR QUE LA AC
 OBSERVACIONES:
     - El modelo de miembros ahora tendra la propiedad acceptInvitation
     - Usar las envs cuando correspondan (por ejemplo la URL_BACKEND)
-
-DELETE /api/workspace/:workspace_id/member/:member_id 
-    Solo debe poder eliminar el dueño, administrador el mismo usuario
-    Un administrador NO puede eliminar a un dueño
-
-PUT /api/workspace/:workspace_id/member/:member_id 
-    Solo admins y dueños pueden actualizar el role de otros miembros, excepto el suyo. 
-    Admin no puede actualizar a dueño
-    NO se puede actualizar a 'owner'
-    body: {
-        role: 'admin' | 'user'
-    }
-
-GET /api/workspace/:workspace_id/member
-    Obtener lista de miembros

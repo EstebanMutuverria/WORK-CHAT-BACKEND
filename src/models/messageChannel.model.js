@@ -14,22 +14,27 @@ import mongoose from "mongoose";
  * @property {Date} created_at - Fecha y hora de creación del mensaje. Por defecto es la fecha actual.
  */
 const messageChannelSchema = new mongoose.Schema({
-    content:{
-        type:String,
-        required:true
+    content: {
+        type: String,
+        required: true
     },
-    fk_id_member:{
+    fk_id_member: {
         type: mongoose.Schema.Types.ObjectId,
-        required:true
+        required: true
     },
-    fk_id_channel:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true
+    fk_id_channel: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     },
-    created_at:{
-        type:Date,
-        default:Date.now,
-        required:true
+    created_at: {
+        type: Date,
+        default: Date.now,
+        required: true
+    },
+    is_active: {
+        type: Boolean,
+        default: true,
+        required: true
     }
 })
 
