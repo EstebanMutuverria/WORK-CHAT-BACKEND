@@ -12,6 +12,18 @@ class ChannelWorkspaceService {
     }
 
     async create(title, description, workspace_id) {
+        if (!title && !description) {
+            throw new ServerError('Todos los campos son requeridos', 400)
+        }
+        if (!title) {
+            throw new ServerError('El titulo es requerido', 400)
+        }
+        if (!description) {
+            throw new ServerError('La descripción es requerida', 400)
+        }
+        if (!workspace_id) {
+            throw new ServerError('El espacio de trabajo no fue especificado', 404)
+        }
         const channel_created = await channelWorkspaceRepository.create(workspace_id, title, description)
         return channel_created
     }

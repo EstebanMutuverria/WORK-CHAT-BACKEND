@@ -31,19 +31,7 @@ class ChannelController {
             const { title, description } = request.body
             const workspace_id = request.params.workspace_id
 
-            if (!title) {
-                throw new ServerError('El nombre del canal es obligatorio', 400)
-            }
-
-            if (!workspace_id) {
-                throw new ServerError('El espacio de trabajo no existe', 404)
-            }
-
             const channel_created = await channelWorkspaceService.create(title, description, workspace_id)
-
-            if (!channel_created) {
-                throw new ServerError('No se pudo crear el canal', 500)
-            }
 
             return response.status(201).json(
                 {
