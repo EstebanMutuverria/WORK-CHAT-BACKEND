@@ -2,6 +2,7 @@ import express from 'express'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import workspacesController from '../controllers/workspace.controller.js'
 import verifyMemberWorkspace from '../middlewares/verifyMemberWorkspaceMiddelware.js'
+import upload from '../middlewares/upload.middleware.js'
 
 const workspacesRouter = express.Router()
 
@@ -9,6 +10,7 @@ const workspacesRouter = express.Router()
 workspacesRouter.post(
     '/',
     authMiddleware,
+    upload.single('image'),
     workspacesController.createWorkspace
 )
 

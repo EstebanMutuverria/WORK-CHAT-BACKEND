@@ -29,7 +29,7 @@ const workspaceSchema = new mongoose.Schema({
     },
     url_image:{
         type:String,
-        required:true
+        required:false
     },
     active:{
         type:Boolean,

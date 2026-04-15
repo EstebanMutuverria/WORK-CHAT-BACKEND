@@ -5,8 +5,8 @@ import memberWorkspaceService from "./memberWorkspace.service.js";
 
 class WorkspaceService {
     async create(title, description, url_image, user_id) {
-        if (!title || !description || !url_image) {
-            throw new ServerError('Todos los campos son obligatorios', 400)
+        if (!title || !description) {
+            throw new ServerError('Título y descripción son obligatorios', 400)
         }
         const workspace_created = await workspaceRepository.create(title, description, url_image)
         await memberWorkspaceService.create(

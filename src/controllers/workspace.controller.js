@@ -26,8 +26,13 @@ class WorkspacesController {
 
     async createWorkspace(request, response, next) {
         try {
-            const { title, description, url_image } = request.body
+            const { title, description } = request.body
             const user = request.user
+            let url_image = ''
+
+            if (request.file) {
+                url_image = `/uploads/${request.file.filename}`
+            }
 
             const workspace_created = await workspaceService.create(title, description, url_image, user.id)
 

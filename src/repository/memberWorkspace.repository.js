@@ -112,7 +112,7 @@ class MemberWorkspacerepository {
 
     async getWorkspaceListByUserId(user_id) {
         const workspacesList = await MemberWorkspace.find({ fk_id_user: user_id })
-            .populate('fk_id_workspace', 'title description')
+            .populate('fk_id_workspace', 'title description url_image')
             .populate('fk_id_user', 'user_name email')
 
         // Filter out any orphaned records where the workspace or user was deleted
@@ -126,6 +126,7 @@ class MemberWorkspacerepository {
                     workspace_id: workspace.fk_id_workspace._id,
                     workspace_title: workspace.fk_id_workspace.title,
                     workspace_description: workspace.fk_id_workspace.description,
+                    workspace_image: workspace.fk_id_workspace.url_image,
                     user_name: workspace.fk_id_user.user_name,
                     user_email: workspace.fk_id_user.email
                 }
@@ -147,7 +148,7 @@ class MemberWorkspacerepository {
             workspace_id: workspace.fk_id_workspace._id,
             workspace_title: workspace.fk_id_workspace.title,
             workspace_description: workspace.fk_id_workspace.description,
-            workspace_url_image: workspace.fk_id_workspace.url_image
+            workspace_image: workspace.fk_id_workspace.url_image
         }
         return workspaceMapped
     }

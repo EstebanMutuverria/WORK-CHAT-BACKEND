@@ -52,6 +52,9 @@ app.use(express.json())
 //Middleware para procesar cuerpos de solicitudes en formato URL-encoded
 app.use(express.urlencoded({ extended: true }))
 
+// Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static('public'))
+
 // Configuración y montaje de las rutas
 /**
  * @description Montaje de la ruta para chequeos de salud (Health Check).
