@@ -105,10 +105,6 @@ class MemberWorkspacerepository {
 
                 user_name: member.fk_id_user.user_name,
                 user_email: member.fk_id_user.email,
-
-                //TODO: Eliminar si no se rompe nada
-                /*                 workspace_title: member.fk_id_workspace.title,
-                                workspace_description: member.fk_id_workspace.description */
             }
         })
         return member_list_mapped

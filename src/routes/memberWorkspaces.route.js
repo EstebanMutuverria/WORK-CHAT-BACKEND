@@ -40,5 +40,12 @@ memberWorkspacesRouter.put(
     memberWorkspaceController.updateRole
 )
 
+memberWorkspacesRouter.get(
+    '/memberList',
+    authMiddleware,
+    verifyMemberWorkspace([]),
+    memberWorkspaceController.getAll
+)
+
 
 export default memberWorkspacesRouter

@@ -149,6 +149,15 @@ class MemberWorkspaceService {
         const member_updated = await memberWorkspaceRepository.updateRole(member_id, role)
         return member_updated
     }
+
+    async getAll(workspace_id) {
+        if (!workspace_id) {
+            throw new ServerError('Espacio de trabajo no especificado', 404)
+        }
+
+        const memberList = await memberWorkspaceRepository.getMemberList(workspace_id)
+        return memberList
+    }
 }
 
 const memberWorkspaceService = new MemberWorkspaceService()

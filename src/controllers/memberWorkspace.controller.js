@@ -114,6 +114,26 @@ class MemberWorkspaceController {
             next(error)
         }
     }
+
+    async getAll(request, response, next) {
+        try {
+            const workspace_id = request.params.workspace_id
+
+            const memberList = await memberWorkspaceService.getAll(workspace_id)
+            return response.status(200).json(
+                {
+                    message: 'Lista de miembros obtenida exitosamente',
+                    ok: true,
+                    status: 200,
+                    data: {
+                        memberList: memberList
+                    }
+                }
+            )
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 const memberWorkspaceController = new MemberWorkspaceController()
