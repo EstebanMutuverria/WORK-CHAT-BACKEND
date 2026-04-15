@@ -12,6 +12,7 @@ import userRepository from "../repository/user.repository.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { getEmailTemplate } from "../helper/htmlTemplates.helper.js"
+import valid_email_format from "../helper/valid_email_format.helper.js"
 
 //Registro:
 //Validar que el usuario no exista previamente en la DB (con el mismo mail), si existe dar error con status: 400
@@ -39,6 +40,9 @@ class AuthService {
     async register({ user_name, password, email }) {
         if (!user_name || !password || !email) {
             throw new ServerError("Todos los campos son obligatorios", 400)
+        }
+        if (!valid_email_format(email)) {
+            throw new ServerError("Email invalido", 400)
         }
         const getUserByEmail = await userRepository.getByEmail(email)
         if (getUserByEmail) {
