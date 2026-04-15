@@ -7,6 +7,7 @@ function verifyMemberWorkspace(valid_roles = []) {
             const workspace_id = request.params.workspace_id
             const user_id = request.user.id
 
+            //Verifica que el usuario sea miembro de ese espacio de trabajo
             const member = await memberWorkspaceRepository.getUserByWorkspaceIdAndUserId(workspace_id, user_id)
             if (!member || !user_id) {
                 throw new ServerError('No tienes permiso para acceder a este workspace', 403)

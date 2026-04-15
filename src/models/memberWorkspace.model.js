@@ -38,6 +38,11 @@ const memberWorkspaceSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    acceptInvitation: {
+        type: String,
+        enum: ['pending', 'accepted', 'rejected'],
+        default: 'pending'
     }
 })
 

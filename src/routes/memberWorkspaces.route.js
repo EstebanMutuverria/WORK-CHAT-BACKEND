@@ -1,78 +1,44 @@
 import express from 'express'
-import workspaceController from '../controllers/workspace.controller.js'
+import memberWorkspaceController from '../controllers/memberWorkspace.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import verifyMemberWorkspace from '../middlewares/verifyMemberWorkspaceMiddelware.js'
 import AVILABLE_ROLES from '../constants/roles.constants.js'
-const memberWorkspacesRouter = express.Router()
 
-//Obtiene los espacios de trabajo del usuario logueado
-memberWorkspacesRouter.get(
-    '/',
-    authMiddleware,
-    workspaceController.getWorkspaces
+const memberWorkspacesRouter = express.Router({ mergeParams: true })
 
-)
-
-//Crea un espacio de trabajo
+/**
+ * @route POST /api/workspaces/:workspace_id/members/invite
+ * @description Invitar a un usuario a un espacio de trabajo. Solo accesible por OWNER y ADMIN.
+ */
 memberWorkspacesRouter.post(
-    '/',
+    '/invite',
     authMiddleware,
-    workspaceController.createWorkspace
+    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
+    memberWorkspaceController.inviteMember
 )
 
-//Obtiene un espacio de trabajo por id para poder visualizarlo
+/**
+ * @route GET /api/workspaces/:workspace_id/members
+ * @description Procesar la respuesta a una invitación (aceptar/rechazar).
+ */
 memberWorkspacesRouter.get(
-    '/:workspace_id',
-    authMiddleware,
-    verifyMemberWorkspace([]),
-    workspaceController.getWorkspacebyId
+    '/',
+    memberWorkspaceController.respondToInvitation
 )
 
-//Elimina un miembro del espacio de trabajo
-/* memberWorkspacesRouter.delete(
-    '/workspace_id/member/:member_id',
+memberWorkspacesRouter.delete(
+    '/:member_id',
     authMiddleware,
     verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.deleteMember
-) */
-//Elimina logicamnte un espacio de trabajo
-/* memberWorkspacesRouter.put(
-    '/:workspace_id/deleteLogic',
-    authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.deleteLogic
-) */
-
-//Elimina fisicamente un espacio de trabajo
-/* memberWorkspacesRouter.delete(
-    '/:workspace_id/deleteFisic',
-    authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.deleteFisic
-) */
-
-//Crea un miembro del espacio de trabajo
-/* memberWorkspacesRouter.post(
-    '/:workspace_id/member',
-    authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.createMember
-) */
-
-/* memberWorkspacesRouter.put(
-    '/:workspace_id/member/:member_id/deleteLogic',
-    authMiddleware,
-    verifyMemberWorkspace,
-    workspaceController.deleteLogicMember
-) */
-
-//Actualiza el rol de un miembro del espacio de trabajo
-/* memberWorkspacesRouter.put(
-    '/:workspace_id/member/:member_id',
-    authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.updateMemberById
+    memberWorkspaceController.delete
 )
-*/
+
+memberWorkspacesRouter.put(
+    '/:member_id',
+    authMiddleware,
+    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
+    memberWorkspaceController.updateRole
+)
+
 
 export default memberWorkspacesRouter

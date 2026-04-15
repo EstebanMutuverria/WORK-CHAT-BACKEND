@@ -36,8 +36,8 @@ class MemberWorkspacerepository {
      * @param {string} id - ID del documento MemberWorkspace a eliminar.
      * @returns {Promise<void>}
      */
-    async deleteById(id) {
-        await MemberWorkspace.findByIdAndDelete(id)
+    async deleteById(member_id) {
+        await MemberWorkspace.findByIdAndDelete(member_id)
     }
 
     /**
@@ -64,6 +64,11 @@ class MemberWorkspacerepository {
         return new_memberWorkspace
     }
 
+    async updateRole(member_id, role) {
+        const member_updated = await MemberWorkspace.findByIdAndUpdate(member_id, { role: role }, { new: true })
+        return member_updated
+    }
+
     /**
      * @async
      * @function updateRole
@@ -87,8 +92,6 @@ class MemberWorkspacerepository {
     async getMemberList(work_space_id) {
         const member_list = await MemberWorkspace.find({ fk_id_workspace: work_space_id })
             .populate("fk_id_user", "user_name email")
-        //TODO: Eliminar si no se rompe nada
-        //.populate("fk_id_workspace", "title description")
 
         const validMembers = member_list.filter(
             (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
@@ -151,6 +154,18 @@ class MemberWorkspacerepository {
             workspace_url_image: workspace.fk_id_workspace.url_image
         }
         return workspaceMapped
+    }
+
+    /**
+     * @async
+     * @function updateInvitationStatus
+     * @description Actualiza el estado de la invitación de un miembro.
+     * @param {string} id - ID del documento MemberWorkspace.
+     * @param {string} status - Nuevo estado ('accepted', 'rejected').
+     * @returns {Promise<Object>} El documento actualizado.
+     */
+    async updateInvitationStatus(id, status) {
+        return await MemberWorkspace.findByIdAndUpdate(id, { acceptInvitation: status }, { new: true })
     }
 
 }

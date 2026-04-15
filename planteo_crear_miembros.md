@@ -26,3 +26,8 @@ Revisar si el miembro esta en pendiente, si no esta pendiente NO DEJAR QUE LA AC
 OBSERVACIONES:
     - El modelo de miembros ahora tendra la propiedad acceptInvitation
     - Usar las envs cuando correspondan (por ejemplo la URL_BACKEND)
+
+
+- Implementar el frontend para poder invitar miembros
+- Implementar el frontend para poder aceptar o rechazar invitaciones
+
