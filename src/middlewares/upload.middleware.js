@@ -1,11 +1,18 @@
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs'
 import ServerError from '../helper/serverError.helper.js'
+
+// Asegurar que la carpeta de destino existe
+const uploadDir = path.join(process.cwd(), 'public', 'uploads')
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true })
+}
 
 // Configuración de almacenamiento
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads/')
+        cb(null, uploadDir)
     },
     filename: (req, file, cb) => {
         // Nombre de archivo único: timestamp + extensión original
