@@ -23,7 +23,8 @@ class MemberWorkspacerepository {
         const memberWorkspace_created = await MemberWorkspace.create({
             fk_id_workspace: fk_id_workspace,
             fk_id_user: fk_id_user,
-            role: role
+            role: role,
+            acceptInvitation: role === 'owner' ? 'accepted' : 'pending'
         })
 
         return memberWorkspace_created
