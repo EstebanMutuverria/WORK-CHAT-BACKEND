@@ -2,6 +2,7 @@
   "name": "tp_integrador_slack",
   "version": "1.0.0",
   "main": "/src/main.js",
+  "type": "module",
   "scripts": {
     "start": "node src/main.js",
     "dev": "node --watch src/main.js",
