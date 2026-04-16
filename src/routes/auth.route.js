@@ -5,6 +5,7 @@
 
 import express from 'express'
 import authController from '../controllers/auth.controller.js'
+import authMiddleware from '../middlewares/authMiddleware.js'
 const authRouter = express.Router()
 
 /**
@@ -66,4 +67,16 @@ authRouter.post(
     '/reset-password/:reset_token',
     authController.resetPassword
 )
+
+/**
+ * @route GET /api/auth/verify
+ * @description Endpoint para verificar si el usuario logueado sigue existiendo en la DB.
+ * @access Private
+ */
+authRouter.get(
+    '/verify',
+    authMiddleware,
+    authController.verifyToken
+)
+
 export default authRouter

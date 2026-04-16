@@ -111,8 +111,6 @@ class AuthController {
         try {
             const { email } = request.body
 
-            console.log('1. PIDIENDO RESET DE CONTRASEÑA DE: ', request.body)
-
             await authService.resetPasswordRequest({ email })
             return response.status(200).json(
                 {
@@ -167,6 +165,14 @@ class AuthController {
                 error.message || 'Error al restablecer la contraseña'
             ))
         }
+    }
+
+    async verifyToken(request, response) {
+        return response.status(200).json({
+            ok: true,
+            message: "Token válido",
+            status: 200
+        })
     }
 }
 

@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken"
 import ENVIRONMENT from "../config/environment.config.js"
 import ServerError from "../helper/serverError.helper.js"
-function authMiddleware(request, response, next) {
+import userRepository from "../repository/user.repository.js"
+
+async function authMiddleware(request, response, next) {
     try {
         //El token GENERALMENTE se envia a el header de authorization
         const auth_header = request.headers.authorization
@@ -19,6 +21,12 @@ function authMiddleware(request, response, next) {
 
         //Verifico que el token sea valido
         const payload = jwt.verify(auth_token, ENVIRONMENT.JWT_SECRET_KEY)
+
+        //Validación extra: ¿El usuario existe en la DB?
+        const user = await userRepository.getById(payload.id)
+        if (!user) {
+            throw new ServerError('Usuario no encontrado', 401)
+        }
 
         //Le asigno el payload al objeto request para que pueda ser utilizado en los controladores
         request.user = payload
