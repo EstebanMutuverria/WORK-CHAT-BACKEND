@@ -19,6 +19,9 @@ const ENVIRONMENT = {
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
     URL_FRONTEND: process.env.URL_FRONTEND,
     URL_FRONTEND_DEPLOYED: process.env.URL_FRONTEND_DEPLOYED,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     
     /**
      * @description Obtiene la URL del frontend adecuada según el entorno actual.

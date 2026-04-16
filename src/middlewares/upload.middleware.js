@@ -1,37 +1,33 @@
 import multer from 'multer'
-import path from 'path'
-import fs from 'fs'
+import { v2 as cloudinary } from 'cloudinary'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
 import ServerError from '../helper/serverError.helper.js'
+import ENVIRONMENT from '../config/environment.config.js'
 
-// Asegurar que la carpeta de destino existe
-const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true })
-}
+// Configuración de Cloudinary
+cloudinary.config({
+    cloud_name: ENVIRONMENT.CLOUDINARY_CLOUD_NAME,
+    api_key: ENVIRONMENT.CLOUDINARY_API_KEY,
+    api_secret: ENVIRONMENT.CLOUDINARY_API_SECRET
+})
 
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir)
-    },
-    filename: (req, file, cb) => {
-        // Nombre de archivo único: timestamp + extensión original
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+// Configuración del almacenamiento en Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'workspaces',
+        allowed_formats: ['jpg', 'jpeg', 'png'],
+        // Opcional: transformaciones para optimizar premium vibes
+        transformation: [{ width: 500, height: 500, crop: 'limit' }]
     }
 })
 
-// Filtro de archivos por formato
+// Filtro de archivos (redundante pero añade una capa extra)
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png/
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase())
-    const mimetype = allowedTypes.test(file.mimetype)
-
-    if (extname && mimetype) {
-        return cb(null, true)
-    } else {
-        cb(new ServerError('Solo se permiten imágenes (jpg, jpeg, png)', 400))
+    if (!file.mimetype.startsWith('image/')) {
+        return cb(new ServerError('Solo se permiten imágenes', 400), false)
     }
+    cb(null, true)
 }
 
 const upload = multer({

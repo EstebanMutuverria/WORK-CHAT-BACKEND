@@ -31,7 +31,8 @@ class WorkspacesController {
             let url_image = ''
 
             if (request.file) {
-                url_image = `/uploads/${request.file.filename}`
+                // Con CloudinaryStorage, request.file.path ya contiene la URL completa
+                url_image = request.file.path
             }
 
             const workspace_created = await workspaceService.create(title, description, url_image, user.id)
