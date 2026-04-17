@@ -10,7 +10,7 @@ import mailerTransporter from "../config/malier.confing.js"
 import ServerError from "../helper/serverError.helper.js"
 import userRepository from "../repository/user.repository.js"
 import jwt from "jsonwebtoken"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { getEmailTemplate } from "../helper/htmlTemplates.helper.js"
 import valid_email_format from "../helper/valid_email_format.helper.js"
 
