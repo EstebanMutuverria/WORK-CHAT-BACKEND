@@ -103,6 +103,7 @@ class MemberWorkspacerepository {
                 member_id: member._id,
                 member_role: member.role,
                 member_created_at: member.created_at,
+                member_acceptInvitation: member.acceptInvitation,
 
                 user_name: member.fk_id_user.user_name,
                 user_email: member.fk_id_user.email,
