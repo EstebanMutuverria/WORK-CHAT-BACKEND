@@ -14,7 +14,7 @@ import memberWorkspaceRepository from "./repository/memberWorkspace.repository.j
 import workspaceRepository from "./repository/workspace.repository.js";
 import channelWorkspaceRepository from "./repository/channelWorkspace.repository.js";
 import messageChannelRepository from "./repository/messageChannel.repository.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
 import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.route.js";
 import workspacesRouter from "./routes/workspaces.route.js";
