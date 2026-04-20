@@ -27,13 +27,17 @@ const fileFilter = (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
         return cb(new ServerError('Solo se permiten imágenes', 400), false)
     }
+
+    if (file.size > 2.5 * 1024 * 1024) {
+        return cb(new ServerError('El archivo debe pesar menos de 2.5MB', 400), false)
+    }
     cb(null, true)
 }
 
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 2 * 1024 * 1024 // 2MB
+        fileSize: 2.5 * 1024 * 1024 // 2.5MB
     },
     fileFilter: fileFilter
 })
