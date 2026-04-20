@@ -37,14 +37,15 @@ workspacesRouter.put(
     verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
     workspaceController.deleteLogic
 )
+    */
 
 //Elimina fisicamente un espacio de trabajo
 workspacesRouter.delete(
-    '/:workspace_id/deleteFisic',
+    '/:workspace_id',
     authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
-    workspaceController.deleteFisic
-) */
+    verifyMemberWorkspace([AVILABLE_ROLES.OWNER]),
+    workspacesController.deleteById
+)
 
 //Actualiza un espacio de trabajo
 workspacesRouter.put(

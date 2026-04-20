@@ -51,6 +51,20 @@ class ChannelWorkspaceRepository {
 
     /**
      * @async
+     * @function deleteByWorkspaceId
+     * @description Elimina todos los canales asociados a un workspace_id.
+     * @param {string} workspace_id - ID del espacio de trabajo.
+     */
+    async deleteByWorkspaceId(workspace_id) {
+        try {
+            await ChannelWorkspace.deleteMany({ fk_id_workspace: workspace_id })
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
+    }
+
+    /**
+     * @async
      * @function getById
      * @description Obtiene un canal específico por su ID.
      * @param {string} channel_id - ID del canal buscado.

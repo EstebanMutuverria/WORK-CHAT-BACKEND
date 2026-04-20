@@ -55,6 +55,20 @@ class MemberWorkspacerepository {
 
     /**
      * @async
+     * @function deleteByWorkspaceId
+     * @description Elimina todos los miembros asociados a un workspace_id.
+     * @param {string} workspace_id - ID del espacio de trabajo.
+     */
+    async deleteByWorkspaceId(workspace_id) {
+        try {
+            await MemberWorkspace.deleteMany({ fk_id_workspace: workspace_id })
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
+    }
+
+    /**
+     * @async
      * @function getById
      * @description Obtiene el registro de un miembro por su ID.
      * @param {string} id - ID del documento MemberWorkspace buscado.

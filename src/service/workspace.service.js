@@ -1,4 +1,5 @@
 import ServerError from "../helper/serverError.helper.js";
+import channelWorkspaceRepository from "../repository/channelWorkspace.repository.js";
 import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
 import workspaceRepository from "../repository/workspace.repository.js";
 import memberWorkspaceService from "./memberWorkspace.service.js";
@@ -41,6 +42,28 @@ class WorkspaceService {
         }
 
         return workspace_updated
+    }
+
+    async deleteById(workspace_id) {
+        if (!workspace_id) {
+            throw new ServerError('Ningún espacio de trabajo fue seleccionado.', 400)
+        }
+
+        // 1. Eliminar el workspace físicamente
+        const workspace_deleted = await workspaceRepository.deleteById(workspace_id)
+
+        if (!workspace_deleted) {
+            // Si no se encontró, lanzamos 404 en lugar de 403 para ser más precisos
+            throw new ServerError('No fue posible eliminar el espacio de trabajo. El ID no existe.', 404)
+        }
+
+        // 2. Eliminación en cascada: Borrar miembros asociados
+        await memberWorkspaceRepository.deleteByWorkspaceId(workspace_id)
+
+        // 3. Eliminación en cascada: Borrar canales asociados
+        await channelWorkspaceRepository.deleteByWorkspaceId(workspace_id)
+
+        return workspace_deleted
     }
 }
 const workspaceService = new WorkspaceService()

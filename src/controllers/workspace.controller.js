@@ -91,6 +91,25 @@ class WorkspacesController {
             next(error)
         }
     }
+
+    async deleteById(request, response, next) {
+        try {
+            const workspace_id = request.params.workspace_id
+            const workspace_deleted = await workspaceService.deleteById(workspace_id)
+            return response.status(200).json(
+                {
+                    message: 'Workspace eliminado exitosamente',
+                    status: 200,
+                    ok: true,
+                    data: {
+                        workspace_deleted: workspace_deleted
+                    }
+                }
+            )
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 const workspacesController = new WorkspacesController()

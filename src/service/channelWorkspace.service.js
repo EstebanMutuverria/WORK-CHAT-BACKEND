@@ -39,12 +39,12 @@ class ChannelWorkspaceService {
         return channel_updated
     }
 
-    async deletById(id) {
+    async deleteById(id) {
         const channel_deleted = await channelWorkspaceRepository.deleteById(id)
         return channel_deleted
     }
 
-    async deletLogic(id) {
+    async deleteLogic(id) {
         const channel_deleted = await channelWorkspaceRepository.deleteLogic(id)
         return channel_deleted
     }

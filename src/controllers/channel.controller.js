@@ -93,7 +93,7 @@ class ChannelController {
                 throw new ServerError('El canal no es valido', 403);
 
             }
-            const channel_deleted = await channelWorkspaceService.deletById(channel_id)
+            const channel_deleted = await channelWorkspaceService.deleteById(channel_id)
             return response.status(200).json(
                 {
                     message: 'Canal eliminado exitosamente',

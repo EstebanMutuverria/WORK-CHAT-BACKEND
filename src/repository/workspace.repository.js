@@ -42,9 +42,10 @@ class WorkspaceRepository {
      * @param {string} id - ID del espacio de trabajo.
      * @returns {Promise<void>}
      */
-    async deleteById(id) {
+    async deleteById(workspace_id) {
         try {
-            await Workspace.findByIdAndDelete(id)
+            const workspace_deleted = await Workspace.findOneAndDelete({ _id: workspace_id })
+            return workspace_deleted
         } catch (error) {
             repositoryErrorHandler(error)
         }
