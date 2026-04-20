@@ -4,12 +4,16 @@
  */
 
 import MemberWorkspace from "../models/memberWorkspace.model.js"
+import ServerError from "../helper/serverError.helper.js";
+import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
  * @class MemberWorkspacerepository
  * @description Clase que proporciona métodos para administrar la relación entre usuarios y espacios de trabajo en Mongoose.
  */
 class MemberWorkspacerepository {
+
+
     /**
      * @async
      * @function create
@@ -20,14 +24,18 @@ class MemberWorkspacerepository {
      * @returns {Promise<void>}
      */
     async create(fk_id_workspace, fk_id_user, role) {
-        const memberWorkspace_created = await MemberWorkspace.create({
-            fk_id_workspace: fk_id_workspace,
-            fk_id_user: fk_id_user,
-            role: role,
-            acceptInvitation: role === 'owner' ? 'accepted' : 'pending'
-        })
+        try {
+            const memberWorkspace_created = await MemberWorkspace.create({
+                fk_id_workspace: fk_id_workspace,
+                fk_id_user: fk_id_user,
+                role: role,
+                acceptInvitation: role === 'owner' ? 'accepted' : 'pending'
+            })
 
-        return memberWorkspace_created
+            return memberWorkspace_created
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class MemberWorkspacerepository {
      * @returns {Promise<void>}
      */
     async deleteById(member_id) {
-        await MemberWorkspace.findByIdAndDelete(member_id)
+        try {
+            await MemberWorkspace.findByIdAndDelete(member_id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -49,7 +61,11 @@ class MemberWorkspacerepository {
      * @returns {Promise<Object>} El documento MemberWorkspace encontrado.
      */
     async getById(id) {
-        return await MemberWorkspace.findById(id)
+        try {
+            return await MemberWorkspace.findById(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -60,14 +76,13 @@ class MemberWorkspacerepository {
      * @returns {Promise<Object>} El documento actualizado.
      */
     async updateById(new_props) {
-        const new_memberWorkspace = await MemberWorkspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
+        try {
+            const new_memberWorkspace = await MemberWorkspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
 
-        return new_memberWorkspace
-    }
-
-    async updateRole(member_id, role) {
-        const member_updated = await MemberWorkspace.findByIdAndUpdate(member_id, { role: role }, { new: true })
-        return member_updated
+            return new_memberWorkspace
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -76,10 +91,15 @@ class MemberWorkspacerepository {
      * @description Actualiza únicamente el rol de un miembro en particular.
      * @param {string} id - ID del documento MemberWorkspace.
      * @param {string} role - Nuevo rol a asignar.
-     * @returns {Promise<void>}
+     * @returns {Promise<Object>} El documento actualizado.
      */
     async updateRole(id, role) {
-        await MemberWorkspace.findByIdAndUpdate(id, { role: role })
+        try {
+            const member_updated = await MemberWorkspace.findByIdAndUpdate(id, { role: role }, { new: true })
+            return member_updated
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -91,68 +111,89 @@ class MemberWorkspacerepository {
      * @returns {Promise<Array<Object>>} Un array de objetos con información detallada de cada miembro.
      */
     async getMemberList(work_space_id) {
-        const member_list = await MemberWorkspace.find({ fk_id_workspace: work_space_id })
-            .populate("fk_id_user", "user_name email")
+        try {
+            const member_list = await MemberWorkspace.find({ fk_id_workspace: work_space_id })
+                .populate("fk_id_user", "user_name email")
 
-        const validMembers = member_list.filter(
-            (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
-        )
+            const validMembers = member_list.filter(
+                (member) => member.fk_id_workspace !== null && member.fk_id_user !== null
+            )
 
-        const member_list_mapped = validMembers.map((member) => {
-            return {
-                member_id: member._id,
-                member_role: member.role,
-                member_created_at: member.created_at,
-                member_acceptInvitation: member.acceptInvitation,
+            const member_list_mapped = validMembers.map((member) => {
+                return {
+                    member_id: member._id,
+                    member_role: member.role,
+                    member_created_at: member.created_at,
+                    member_acceptInvitation: member.acceptInvitation,
 
-                user_name: member.fk_id_user.user_name,
-                user_email: member.fk_id_user.email,
-            }
-        })
-        return member_list_mapped
+                    user_name: member.fk_id_user?.user_name || 'Usuario desconocido',
+                    user_email: member.fk_id_user?.email || 'N/A',
+                }
+            })
+            return member_list_mapped
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async getWorkspaceListByUserId(user_id) {
-        const workspacesList = await MemberWorkspace.find({ fk_id_user: user_id })
-            .populate('fk_id_workspace', 'title description url_image')
-            .populate('fk_id_user', 'user_name email')
+        try {
+            const workspacesList = await MemberWorkspace.find({ fk_id_user: user_id })
+                .populate('fk_id_workspace', 'title description url_image')
+                .populate('fk_id_user', 'user_name email')
 
-        // Filter out any orphaned records where the workspace or user was deleted
-        const validWorkspaces = workspacesList.filter(
-            (workspace) => workspace.fk_id_workspace !== null && workspace.fk_id_user !== null
-        )
+            // Filter out any orphaned records where the workspace or user was deleted
+            const validWorkspaces = workspacesList.filter(
+                (workspace) => workspace.fk_id_workspace !== null && workspace.fk_id_user !== null
+            )
 
-        const workspaces_mapped = validWorkspaces.map(
-            (workspace) => {
-                return {
-                    workspace_id: workspace.fk_id_workspace._id,
-                    workspace_title: workspace.fk_id_workspace.title,
-                    workspace_description: workspace.fk_id_workspace.description,
-                    workspace_image: workspace.fk_id_workspace.url_image,
-                    user_name: workspace.fk_id_user.user_name,
-                    user_email: workspace.fk_id_user.email
+            const workspaces_mapped = validWorkspaces.map(
+                (workspace) => {
+                    return {
+                        workspace_id: workspace.fk_id_workspace?._id,
+                        workspace_title: workspace.fk_id_workspace?.title || 'Espacio desconocido',
+                        workspace_description: workspace.fk_id_workspace?.description || '',
+                        workspace_image: workspace.fk_id_workspace?.url_image || '',
+                        user_name: workspace.fk_id_user?.user_name || 'Usuario desconocido',
+                        user_email: workspace.fk_id_user?.email || 'N/A'
+                    }
                 }
-            }
-        )
+            )
 
-        return workspaces_mapped
+            return workspaces_mapped
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async getUserByWorkspaceIdAndUserId(workspace_id, user_id) {
-        const member = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
-        return member
+        try {
+            const member = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
+            return member
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async getWorkspaceByUserAndWorkspaceId(workspace_id, user_id) {
-        const workspace = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
-            .populate('fk_id_workspace', 'title description url_image')
-        const workspaceMapped = {
-            workspace_id: workspace.fk_id_workspace._id,
-            workspace_title: workspace.fk_id_workspace.title,
-            workspace_description: workspace.fk_id_workspace.description,
-            workspace_image: workspace.fk_id_workspace.url_image
+        try {
+            const workspace = await MemberWorkspace.findOne({ fk_id_workspace: workspace_id, fk_id_user: user_id })
+                .populate('fk_id_workspace', 'title description url_image')
+
+            if (!workspace || !workspace.fk_id_workspace) {
+                return null;
+            }
+
+            const workspaceMapped = {
+                workspace_id: workspace.fk_id_workspace._id,
+                workspace_title: workspace.fk_id_workspace.title,
+                workspace_description: workspace.fk_id_workspace.description,
+                workspace_image: workspace.fk_id_workspace.url_image
+            }
+            return workspaceMapped
+        } catch (error) {
+            repositoryErrorHandler(error)
         }
-        return workspaceMapped
     }
 
     /**
@@ -164,9 +205,12 @@ class MemberWorkspacerepository {
      * @returns {Promise<Object>} El documento actualizado.
      */
     async updateInvitationStatus(id, status) {
-        return await MemberWorkspace.findByIdAndUpdate(id, { acceptInvitation: status }, { new: true })
+        try {
+            return await MemberWorkspace.findByIdAndUpdate(id, { acceptInvitation: status }, { new: true })
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
-
 }
 
 /**

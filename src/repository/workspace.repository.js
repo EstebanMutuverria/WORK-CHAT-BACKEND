@@ -4,12 +4,16 @@
  */
 
 import Workspace from "../models/workspace.model.js"
+import ServerError from "../helper/serverError.helper.js";
+import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
  * @class WorkspaceRepository
  * @description Clase que provee métodos asíncronos para operaciones CRUD y peticiones de espacios de trabajo.
  */
 class WorkspaceRepository {
+
+
     /**
      * @async
      * @function create
@@ -20,12 +24,16 @@ class WorkspaceRepository {
      * @returns {Promise<void>}
      */
     async create(title, description, url_image) {
-        const workspace_created = await Workspace.create({
-            title: title,
-            description: description,
-            url_image: url_image
-        })
-        return workspace_created
+        try {
+            const workspace_created = await Workspace.create({
+                title: title,
+                description: description,
+                url_image: url_image
+            })
+            return workspace_created
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -36,7 +44,11 @@ class WorkspaceRepository {
      * @returns {Promise<void>}
      */
     async deleteById(id) {
-        await Workspace.findByIdAndDelete(id)
+        try {
+            await Workspace.findByIdAndDelete(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class WorkspaceRepository {
      * @returns {Promise<Object>} El documento del espacio de trabajo hallado.
      */
     async getById(id) {
-        return await Workspace.findById(id)
+        try {
+            return await Workspace.findById(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -58,9 +74,13 @@ class WorkspaceRepository {
      * @returns {Promise<Object>} El espacio de trabajo actualizado.
      */
     async updateById(new_props) {
-        const new_workspace = await Workspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
+        try {
+            const new_workspace = await Workspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
 
-        return new_workspace
+            return new_workspace
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 }
 

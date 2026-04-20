@@ -1,6 +1,6 @@
 import ServerError from "../helper/serverError.helper.js"
 
-function errorHandler(error, request, response, next) {
+export function errorHandler(error, request, response, next) {
     if (error instanceof ServerError || error.status) {
         return response.status(error.status || 400).json({
             message: error.message,
@@ -10,11 +10,30 @@ function errorHandler(error, request, response, next) {
     } else {
         console.error("ERROR NO CONTROLADO:", error)
         return response.status(500).json({
-            message: "Error interno: " + error.message,
+            message: "Lo sentimos, ha ocurrido un error inesperado al procesar tu solicitud.",
             ok: false,
             status: 500
         })
     }
 }
 
-export default errorHandler
+export function repositoryErrorHandler(error) {
+    // Error de conexión o tiempo de espera agotado (buffering)
+    if (
+        error.code === 'ENOTFOUND' || 
+        error.name === 'MongooseServerSelectionError' ||
+        error.message.includes('buffering timed out')
+    ) {
+        throw new ServerError('No se pudo establecer conexión con el servidor. Por favor, comprueba tu internet o inténtalo de nuevo en unos momentos.', 503);
+    }
+    
+    if (error.name === 'ValidationError') {
+        throw new ServerError('La información proporcionada no cumple con el formato requerido.', 400);
+    }
+    
+    if (error.name === 'CastError') {
+        throw new ServerError('El identificador solicitado no es válido o no existe.', 404);
+    }
+    
+    throw new ServerError('Lo sentimos, ocurrió un problema al procesar tu solicitud de datos. Por favor, inténtalo más tarde.', 500);
+}

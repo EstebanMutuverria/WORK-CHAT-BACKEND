@@ -20,86 +20,54 @@ import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.ro
 import workspacesRouter from "./routes/workspaces.route.js";
 
 
-// Inicializa la conexión con MongoDB
-connectMongoDB();
 
-// Inicializa la aplicación de Express
-const app = express()
+// Inicializa la conexión con MongoDB y luego inicia el servidor
+const startServer = async () => {
+    try {
+        await connectMongoDB();
 
-//CORS Permite que el frontend se comunique con el backend sin que el navegador bloquee esa conexion.
-const allowedOrigins = [
-    ENVIRONMENT.URL_FRONTEND,
-    ENVIRONMENT.URL_FRONTEND_DEPLOYED,
-    ENVIRONMENT.URL_BACKEND
-];
+        // Inicializa la aplicación de Express
+        const app = express();
 
-//Configuración de CORS
-app.use(cors({
-    origin: function (origin, callback) {
-        // Permitir solicitudes sin origen (como las de Postman o aplicaciones móviles)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            var msg = 'La política CORS para este sitio no permite acceso desde el origen especificado.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
+        // CORS
+        const allowedOrigins = [
+            ENVIRONMENT.URL_FRONTEND,
+            ENVIRONMENT.URL_FRONTEND_DEPLOYED,
+            ENVIRONMENT.URL_BACKEND
+        ];
+
+        app.use(cors({
+            origin: function (origin, callback) {
+                if (!origin) return callback(null, true);
+                if (allowedOrigins.indexOf(origin) === -1) {
+                    var msg = 'La política CORS para este sitio no permite acceso desde el origen especificado.';
+                    return callback(new Error(msg), false);
+                }
+                return callback(null, true);
+            }
+        }));
+
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.static('public'));
+
+        // Rutas
+        app.use('/api/health', healthRouter);
+        app.use('/api/auth', authRouter);
+        app.use('/api/workspaces', workspacesRouter);
+        app.use('/api/workspaces/:workspace_id/channels', channelWorkspaceRouter);
+        app.use('/api/workspaces/:workspace_id/channels/:channel_id', messagesChannelWorkspaceRouter);
+        app.use('/api/workspaces/:workspace_id/members', memberWorkspacesRouter);
+
+        // Manejo de errores
+        app.use(errorHandler);
+
+        app.listen(ENVIRONMENT.PORT, () => {
+            console.log('El servidor está corriendo en el puerto: ' + ENVIRONMENT.PORT);
+        });
+    } catch (error) {
+        console.error("Error al iniciar el servidor:", error);
     }
-}));
+};
 
-// Middleware para procesar cuerpos de solicitudes en formato JSON
-app.use(express.json())
-
-//Middleware para procesar cuerpos de solicitudes en formato URL-encoded
-app.use(express.urlencoded({ extended: true }))
-
-// Servir archivos estáticos desde la carpeta 'public'
-app.use(express.static('public'))
-
-// Configuración y montaje de las rutas
-/**
- * @description Montaje de la ruta para chequeos de salud (Health Check).
- */
-app.use('/api/health', healthRouter)
-
-/**
- * @description Montaje de la ruta relacionada a autenticación, registro, y recuperación de contraseñas.
- */
-app.use('/api/auth', authRouter)
-
-/**
- * @description Montaje de la ruta relacionada a Listado de workspaces del usuario logueado.
- */
-app.use('/api/workspaces', workspacesRouter)
-
-/**
- * @description Montaje de la ruta relacionada a Listado de canales del workspace logueado.
- */
-app.use('/api/workspaces/:workspace_id/channels', channelWorkspaceRouter)
-
-/**
- * @description Montaje de ruta relacionada a Listado de mensages de los canales de cada espacio de trabajo
- */
-app.use('/api/workspaces/:workspace_id/channels/:channel_id', messagesChannelWorkspaceRouter)
-
-/**
- * @description Montaje de ruta relacionada a miembros de cada espacio de trabajo
- */
-app.use('/api/workspaces/:workspace_id/members', memberWorkspacesRouter)
-
-/**
- * @description Manejo de errores.
- */
-app.use(errorHandler)
-
-/**
- * @description Inicia el servidor de Express a escuchar peticiones en el puerto configurado en el entorno.
- */
-app.listen(ENVIRONMENT.PORT,
-    () => console.log('El servidor esta corriendo en el puerto: ' + ENVIRONMENT.PORT)
-)
-
-/* workspaceRepository.create('test', 'lorem', 'lorem') */
-/* memberWorkspaceRepository.create('69c857d6f2b3e9c2a79a9701', '69c575edb55476903eb48ced', 'owner') */
-
-/* channelWorkspaceRepository.create('69d3f4b6c59a6d0c4e7f331a', 'PWA Channel', 'lorem') */
-/* messageChannelRepository.create('test', '69c8583c4d643bffaa78a0c8', '69caa790d8be42fb74aac216') */
+startServer();

@@ -4,12 +4,14 @@
  */
 
 import MessageChannel from "../models/messageChannel.model.js";
+import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
  * @class MessageChannelRepository
  * @description Clase que provee métodos para crear, obtener, actualizar y eliminar mensajes de los canales.
  */
 class MessageChannelRepository {
+
     /**
      * @async
      * @function create
@@ -17,15 +19,19 @@ class MessageChannelRepository {
      * @param {string} content - El contenido del mensaje.
      * @param {string} fk_id_member - ID del miembro que envía el mensaje.
      * @param {string} fk_id_channel - ID del canal donde se envía.
-     * @returns {Promise<void>}
+     * @returns {Promise<Object>}
      */
     async create(content, fk_id_member, fk_id_channel) {
-        const message = await MessageChannel.create({
-            content: content,
-            fk_id_member: fk_id_member,
-            fk_id_channel: fk_id_channel
-        })
-        return message
+        try {
+            const message = await MessageChannel.create({
+                content: content,
+                fk_id_member: fk_id_member,
+                fk_id_channel: fk_id_channel
+            })
+            return message
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -36,7 +42,11 @@ class MessageChannelRepository {
      * @returns {Promise<void>}
      */
     async deleteById(id) {
-        await MessageChannel.findByIdAndDelete(id)
+        try {
+            await MessageChannel.findByIdAndDelete(id)
+        } catch (error) {
+            this._handleError(error)
+        }
     }
 
     /**
@@ -47,7 +57,11 @@ class MessageChannelRepository {
      * @returns {Promise<Object>} El documento del mensaje.
      */
     async getById(id) {
-        return await MessageChannel.findById(id)
+        try {
+            return await MessageChannel.findById(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -58,19 +72,31 @@ class MessageChannelRepository {
      * @returns {Promise<Object>} El documento del mensaje modificado.
      */
     async updateById(new_props) {
-        const new_messageChannel = await MessageChannel.findByIdAndUpdate(new_props.id, new_props, { new: true })
+        try {
+            const new_messageChannel = await MessageChannel.findByIdAndUpdate(new_props.id, new_props, { new: true })
 
-        return new_messageChannel
+            return new_messageChannel
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async getByChannelId(id_channel) {
-        const messages = await MessageChannel.find({ fk_id_channel: id_channel })
-        return messages
+        try {
+            const messages = await MessageChannel.find({ fk_id_channel: id_channel })
+            return messages
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async deleteMessageLogic(id) {
-        const message_deleted = await MessageChannel.findByIdAndUpdate(id, { is_active: false }, { new: true })
-        return message_deleted
+        try {
+            const message_deleted = await MessageChannel.findByIdAndUpdate(id, { is_active: false }, { new: true })
+            return message_deleted
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 }
 

@@ -4,6 +4,8 @@
  */
 
 import ChannelWorkspace from "../models/channelWorkspace.model.js";
+import ServerError from "../helper/serverError.helper.js";
+import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
  * @class ChannelWorkspaceRepository
@@ -14,18 +16,22 @@ class ChannelWorkspaceRepository {
      * @async
      * @function create
      * @description Crea un nuevo canal en la base de datos.
-     * @param {string} fk_id_workspace - ID del espacio de trabajo al que pertenece el canal.
+     * @param {string} workspace_id - ID del espacio de trabajo al que pertenece el canal.
      * @param {string} title - Título del canal.
      * @param {string} description - Descripción del canal.
-     * @returns {Promise<void>}
+     * @returns {Promise<Object>}
      */
     async create(workspace_id, title, description) {
-        const channel_created = await ChannelWorkspace.create({
-            fk_id_workspace: workspace_id,
-            title: title,
-            description: description
-        })
-        return channel_created
+        try {
+            const channel_created = await ChannelWorkspace.create({
+                fk_id_workspace: workspace_id,
+                title: title,
+                description: description
+            })
+            return channel_created
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -36,41 +42,63 @@ class ChannelWorkspaceRepository {
      * @returns {Promise<void>}
      */
     async deleteById(id) {
-        await ChannelWorkspace.findByIdAndDelete(id)
+        try {
+            await ChannelWorkspace.findByIdAndDelete(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
      * @async
      * @function getById
      * @description Obtiene un canal específico por su ID.
-     * @param {string} id - ID del canal buscado.
+     * @param {string} channel_id - ID del canal buscado.
      * @returns {Promise<Object>} El documento del canal encontrado.
      */
     async getById(channel_id) {
-        const channel = await ChannelWorkspace.findById(channel_id)
-        return channel
+        try {
+            const channel = await ChannelWorkspace.findById(channel_id)
+            return channel
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
      * @async
      * @function updateById
      * @description Actualiza los datos de un canal existente.
-     * @param {Object} new_props - Objeto con las propiedades a actualizar, debe incluir el 'id' del canal.
+     * @param {string} id - ID del canal.
+     * @param {string} title - Nuevo título.
+     * @param {string} description - Nueva descripción.
      * @returns {Promise<Object>} El documento del canal con los datos actualizados.
      */
     async updateById(id, title, description) {
-        const channel_updated = await ChannelWorkspace.findByIdAndUpdate(id, { title, description }, { new: true })
-        return channel_updated
+        try {
+            const channel_updated = await ChannelWorkspace.findByIdAndUpdate(id, { title, description }, { new: true })
+            return channel_updated
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async getAll(workspace_id) {
-        const channels = await ChannelWorkspace.find({ fk_id_workspace: workspace_id })
-        return channels
+        try {
+            const channels = await ChannelWorkspace.find({ fk_id_workspace: workspace_id })
+            return channels
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     async deleteLogic(id) {
-        const channel_deleted = await ChannelWorkspace.findByIdAndUpdate(id, { is_active: false }, { new: true })
-        return channel_deleted
+        try {
+            const channel_deleted = await ChannelWorkspace.findByIdAndUpdate(id, { is_active: false }, { new: true })
+            return channel_deleted
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 }
 

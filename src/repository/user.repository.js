@@ -4,12 +4,14 @@
  */
 
 import User from "../models/user.model.js";
+import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
  * @class UserRepository
  * @description Clase que expone los diferentes métodos para realizar operaciones CRUD y consultas específicas sobre usuarios.
  */
-class UserRepository{
+class UserRepository {
+
     /**
      * @async
      * @function create
@@ -19,12 +21,16 @@ class UserRepository{
      * @param {string} email - El correo electrónico del usuario.
      * @returns {Promise<void>}
      */
-    async create(user_name, password, email){
-        await User.create({
-            user_name : user_name,
-            password : password,
-            email : email
-        })
+    async create(user_name, password, email) {
+        try {
+            await User.create({
+                user_name: user_name,
+                password: password,
+                email: email
+            })
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -34,8 +40,12 @@ class UserRepository{
      * @param {string} id - ID del usuario a eliminar.
      * @returns {Promise<void>}
      */
-    async deleteById(id){
-        await User.findByIdAndDelete(id)
+    async deleteById(id) {
+        try {
+            await User.findByIdAndDelete(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -45,8 +55,12 @@ class UserRepository{
      * @param {string} id - ID del usuario.
      * @returns {Promise<Object>} Documento del usuario encontrado.
      */
-    async getById(id){
-        return await User.findById(id)
+    async getById(id) {
+        try {
+            return await User.findById(id)
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -57,16 +71,19 @@ class UserRepository{
      * @param {Object} new_props - Objeto con las propiedades a modificar.
      * @returns {Promise<Object>} El documento del usuario una vez aplicado el cambio.
      */
-    async updateById(id,new_props){
-        const new_user = await User.findByIdAndUpdate
-        (
-            id,
-            new_props,
-            /* {new:true} ya no sirve */
-            {returnDocument:'after'}
-        )
+    async updateById(id, new_props) {
+        try {
+            const new_user = await User.findByIdAndUpdate
+                (
+                    id,
+                    new_props,
+                    { returnDocument: 'after' }
+                )
 
-        return new_user
+            return new_user
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -76,9 +93,13 @@ class UserRepository{
      * @param {string} email - El email del usuario a buscar.
      * @returns {Promise<Object>} El documento del usuario.
      */
-    async getByEmail(email){
-        const user = await User.findOne({email:email})
-        return user
+    async getByEmail(email) {
+        try {
+            const user = await User.findOne({ email: email })
+            return user
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -87,9 +108,13 @@ class UserRepository{
      * @description Obtiene un solo usuario cualquiera de la colección (útil para validaciones o casos de prueba rápidos).
      * @returns {Promise<Object>} El primer documento de usuario encontrado.
      */
-    async getUser(){
-        const user = await User.findOne()
-        return user
+    async getUser() {
+        try {
+            const user = await User.findOne()
+            return user
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
     /**
@@ -100,9 +125,13 @@ class UserRepository{
      * @param {string} password - Contraseña del usuario.
      * @returns {Promise<Object>} El usuario que coincida exactamente con las credenciales dadas.
      */
-    async getUserByEmailAndPassword(email, password){
-        const user = await User.findOne({email:email, password:password})
-        return user
+    async getUserByEmailAndPassword(email, password) {
+        try {
+            const user = await User.findOne({ email: email, password: password })
+            return user
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
     }
 
 }
