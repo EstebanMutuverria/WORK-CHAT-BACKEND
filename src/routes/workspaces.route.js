@@ -3,6 +3,7 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 import workspacesController from '../controllers/workspace.controller.js'
 import verifyMemberWorkspace from '../middlewares/verifyMemberWorkspaceMiddelware.js'
 import upload from '../middlewares/upload.middleware.js'
+import AVILABLE_ROLES from '../constants/roles.constants.js'
 
 const workspacesRouter = express.Router()
 
@@ -44,6 +45,15 @@ workspacesRouter.delete(
     verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
     workspaceController.deleteFisic
 ) */
+
+//Actualiza un espacio de trabajo
+workspacesRouter.put(
+    '/:workspace_id',
+    authMiddleware,
+    verifyMemberWorkspace([AVILABLE_ROLES.OWNER]),
+    upload.single('image'),
+    workspacesController.updateById
+)
 
 
 

@@ -25,6 +25,23 @@ class WorkspaceService {
         return workspace
     }
 
+    async updateById(workspace_id, title, description, url_image) {
+        if (!title) {
+            throw new ServerError('El título es obligatorio', 400)
+        }
+        if (!description) {
+            throw new ServerError('La descripción es obligatoria', 400)
+        }
+        if (!url_image) {
+            throw new ServerError('Debe seleccionar una imagen', 400)
+        }
+        const workspace_updated = await workspaceRepository.updateById(workspace_id, title, description, url_image)
+        if (!workspace_updated) {
+            throw new ServerError('No fue posible actualizar el espacio de trabajo', 403)
+        }
+
+        return workspace_updated
+    }
 }
 const workspaceService = new WorkspaceService()
 export default workspaceService

@@ -4,7 +4,6 @@
  */
 
 import Workspace from "../models/workspace.model.js"
-import ServerError from "../helper/serverError.helper.js";
 import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
 
 /**
@@ -73,9 +72,9 @@ class WorkspaceRepository {
      * @param {Object} new_props - Objeto de valores a actualizar. Debe traer integrado el ID de dicho espacio bajo 'id'.
      * @returns {Promise<Object>} El espacio de trabajo actualizado.
      */
-    async updateById(new_props) {
+    async updateById(workspace_id, title, description, url_image) {
         try {
-            const new_workspace = await Workspace.findByIdAndUpdate(new_props.id, new_props, { new: true })
+            const new_workspace = await Workspace.findByIdAndUpdate(workspace_id, { title: title, description: description, url_image: url_image }, { returnDocument: 'after' })
 
             return new_workspace
         } catch (error) {

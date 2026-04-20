@@ -1,3 +1,4 @@
+import ServerError from "../helper/serverError.helper.js"
 import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js"
 import memberWorkspaceService from "../service/memberWorkspace.service.js"
 import workspaceService from "../service/workspace.service.js"
@@ -67,6 +68,27 @@ class WorkspacesController {
         } catch (error) {
             next(error)
             console.error("Error al obtener el workspace: ", error)
+        }
+    }
+
+    async updateById(request, response, next) {
+        try {
+            const workspace_id = request.params.workspace_id
+            const { title, description, url_image } = request.body
+            const workspace_updated = await workspaceService.updateById(workspace_id, title, description, url_image)
+
+            return response.status(200).json(
+                {
+                    message: 'Workspace actualizado exitosamente',
+                    status: 200,
+                    ok: true,
+                    data: {
+                        workspace_updated: workspace_updated
+                    }
+                }
+            )
+        } catch (error) {
+            next(error)
         }
     }
 }
