@@ -168,6 +168,7 @@ class MemberWorkspacerepository {
                         workspace_title: workspace.fk_id_workspace?.title || 'Espacio desconocido',
                         workspace_description: workspace.fk_id_workspace?.description || '',
                         workspace_image: workspace.fk_id_workspace?.url_image || '',
+                        workspace_role: workspace.role,
                         user_name: workspace.fk_id_user?.user_name || 'Usuario desconocido',
                         user_email: workspace.fk_id_user?.email || 'N/A'
                     }

@@ -16,21 +16,17 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'workspaces',
-        allowed_formats: ['jpg', 'jpeg', 'png'],
-        // Opcional: transformaciones para optimizar premium vibes
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
         transformation: [{ width: 500, height: 500, crop: 'limit' }]
     }
 })
 
-// Filtro de archivos (redundante pero añade una capa extra)
+// Filtro de archivos
 const fileFilter = (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
         return cb(new ServerError('Solo se permiten imágenes', 400), false)
     }
-
-    if (file.size > 2.5 * 1024 * 1024) {
-        return cb(new ServerError('El archivo debe pesar menos de 2.5MB', 400), false)
-    }
+    // El tamaño se valida automáticamente en el objeto 'limits'
     cb(null, true)
 }
 

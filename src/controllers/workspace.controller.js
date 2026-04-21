@@ -74,7 +74,13 @@ class WorkspacesController {
     async updateById(request, response, next) {
         try {
             const workspace_id = request.params.workspace_id
-            const { title, description, url_image } = request.body
+            const { title, description } = request.body
+            let url_image = request.body.url_image
+
+            if (request.file) {
+                url_image = request.file.path
+            }
+
             const workspace_updated = await workspaceService.updateById(workspace_id, title, description, url_image)
 
             return response.status(200).json(

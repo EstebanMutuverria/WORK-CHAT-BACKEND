@@ -7,14 +7,26 @@ export function errorHandler(error, request, response, next) {
             ok: false,
             status: error.status || 400
         })
-    } else {
-        console.error("ERROR NO CONTROLADO:", error)
-        return response.status(500).json({
-            message: "Lo sentimos, ha ocurrido un error inesperado al procesar tu solicitud.",
+    } 
+    
+    // Capturar errores de Multer (subida de archivos)
+    if (error.name === 'MulterError') {
+        let message = 'Error al subir el archivo.'
+        if (error.code === 'LIMIT_FILE_SIZE') message = 'El archivo es demasiado pesado (máximo 2.5MB).'
+        
+        return response.status(400).json({
+            message,
             ok: false,
-            status: 500
+            status: 400
         })
     }
+
+    console.error("ERROR NO CONTROLADO:", error)
+    return response.status(500).json({
+        message: "Lo sentimos, ha ocurrido un error inesperado al procesar tu solicitud.",
+        ok: false,
+        status: 500
+    })
 }
 
 export function repositoryErrorHandler(error) {

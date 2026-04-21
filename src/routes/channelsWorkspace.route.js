@@ -26,7 +26,7 @@ channelWorkspaceRouter.get(
 channelWorkspaceRouter.delete(
     '/:channel_id',
     authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
+    verifyMemberWorkspace([AVILABLE_ROLES.OWNER]),
     verifyChannelMiddleware,
     channelController.deleteById
 )
@@ -40,7 +40,7 @@ channelWorkspaceRouter.put(
     channelController.updateById
 )
 
-//Eliminar logico de un canal
+/* //Eliminar logico de un canal
 channelWorkspaceRouter.put(
     '/:channel_id/logicDelete',
     authMiddleware,
@@ -48,7 +48,7 @@ channelWorkspaceRouter.put(
     verifyChannelMiddleware,
     channelController.deleteLogic
 )
-
+ */
 
 
 export default channelWorkspaceRouter
