@@ -47,5 +47,12 @@ memberWorkspacesRouter.get(
     memberWorkspaceController.getAll
 )
 
+memberWorkspacesRouter.get(
+    '/:member_id',
+    authMiddleware,
+    verifyMemberWorkspace([]),
+    memberWorkspaceController.getByMemberId
+)
+
 
 export default memberWorkspacesRouter

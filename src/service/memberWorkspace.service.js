@@ -126,7 +126,7 @@ class MemberWorkspaceService {
 
         const member = await memberWorkspaceRepository.getById(member_id)
         if (member.role === AVILABLE_ROLES.OWNER) {
-            throw new ServerError('No se puede eliminar al dueño del espacio de trabajo')
+            throw new ServerError('No se puede eliminar al dueño del espacio de trabajo. Primero debes transferir la propiedad si deseas retirarte.', 403)
         }
 
         const member_deleted = await memberWorkspaceRepository.deleteById(member_id)
@@ -157,6 +157,19 @@ class MemberWorkspaceService {
 
         const memberList = await memberWorkspaceRepository.getMemberList(workspace_id)
         return memberList
+    }
+
+    async getByMemberId(workspace_id, member_id) {
+        if (!workspace_id) {
+            throw new ServerError('Espacio de trabajo no especificado', 404)
+        }
+
+        if (!member_id) {
+            throw new ServerError('Miembro no especificado', 404)
+        }
+
+        const member = await memberWorkspaceRepository.getById(member_id)
+        return member
     }
 }
 

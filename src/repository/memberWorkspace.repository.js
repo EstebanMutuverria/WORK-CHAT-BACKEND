@@ -76,7 +76,8 @@ class MemberWorkspacerepository {
      */
     async getById(id) {
         try {
-            return await MemberWorkspace.findById(id)
+            const member = await MemberWorkspace.findById(id)
+            return member
         } catch (error) {
             repositoryErrorHandler(error)
         }
@@ -142,6 +143,7 @@ class MemberWorkspacerepository {
 
                     user_name: member.fk_id_user?.user_name || 'Usuario desconocido',
                     user_email: member.fk_id_user?.email || 'N/A',
+                    user_id: member.fk_id_user?._id
                 }
             })
             return member_list_mapped
@@ -203,7 +205,8 @@ class MemberWorkspacerepository {
                 workspace_id: workspace.fk_id_workspace._id,
                 workspace_title: workspace.fk_id_workspace.title,
                 workspace_description: workspace.fk_id_workspace.description,
-                workspace_image: workspace.fk_id_workspace.url_image
+                workspace_image: workspace.fk_id_workspace.url_image,
+                workspace_role: workspace.role
             }
             return workspaceMapped
         } catch (error) {

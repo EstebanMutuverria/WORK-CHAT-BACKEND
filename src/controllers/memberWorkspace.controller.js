@@ -1,6 +1,7 @@
 import memberWorkspaceService from "../service/memberWorkspace.service.js";
 import { getStatusPage } from "../helper/htmlTemplates.helper.js";
 import ENVIRONMENT from "../config/environment.config.js";
+import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
 
 /**
  * @class MemberWorkspaceController
@@ -127,6 +128,28 @@ class MemberWorkspaceController {
                     status: 200,
                     data: {
                         memberList: memberList
+                    }
+                }
+            )
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getByMemberId(request, response, next) {
+
+        try {
+            const workspace_id = request.params.workspace_id
+            const member_id = request.params.member_id
+
+            const member = await memberWorkspaceService.getByMemberId(workspace_id, member_id)
+            return response.status(200).json(
+                {
+                    message: 'Miembro obtenido exitosamente',
+                    ok: true,
+                    status: 200,
+                    data: {
+                        member: member
                     }
                 }
             )
