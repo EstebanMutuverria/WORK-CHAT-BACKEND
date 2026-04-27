@@ -10,10 +10,6 @@ import healthRouter from "./routes/health.route.js";
 import authRouter from "./routes/auth.route.js";
 import cors from 'cors'
 import memberWorkspacesRouter from "./routes/memberWorkspaces.route.js";
-import memberWorkspaceRepository from "./repository/memberWorkspace.repository.js";
-import workspaceRepository from "./repository/workspace.repository.js";
-import channelWorkspaceRepository from "./repository/channelWorkspace.repository.js";
-import messageChannelRepository from "./repository/messageChannel.repository.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
 import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.route.js";
@@ -70,4 +66,4 @@ const startServer = async () => {
     }
 };
 
-startServer();
+startServer();
