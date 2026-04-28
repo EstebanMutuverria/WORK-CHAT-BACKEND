@@ -1,3 +1,4 @@
+import ServerError from "../helper/serverError.helper.js"
 import userService from "../service/user.service.js"
 
 class UserController {
@@ -8,6 +9,7 @@ class UserController {
             const user_updated = await userService.updateById(user_id, name)
             return res.status(200).json({
                 status: 200,
+                ok: true,
                 message: 'Usuario actualizado correctamente',
                 data: user_updated
             })
