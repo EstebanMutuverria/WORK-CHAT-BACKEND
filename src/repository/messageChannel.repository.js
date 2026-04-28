@@ -45,7 +45,7 @@ class MessageChannelRepository {
         try {
             await MessageChannel.findByIdAndDelete(id)
         } catch (error) {
-            this._handleError(error)
+            repositoryErrorHandler(error)
         }
     }
 
@@ -58,7 +58,7 @@ class MessageChannelRepository {
      */
     async getById(id) {
         try {
-            return await MessageChannel.findById(id)
+            return await MessageChannel.findById(id).populate('fk_id_member')
         } catch (error) {
             repositoryErrorHandler(error)
         }
@@ -84,6 +84,13 @@ class MessageChannelRepository {
     async getByChannelId(id_channel) {
         try {
             const messages = await MessageChannel.find({ fk_id_channel: id_channel })
+                .populate({
+                    path: 'fk_id_member',
+                    populate: {
+                        path: 'fk_id_user',
+                        select: 'user_name'
+                    }
+                })
             return messages
         } catch (error) {
             repositoryErrorHandler(error)

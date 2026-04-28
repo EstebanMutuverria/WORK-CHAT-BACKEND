@@ -10,9 +10,14 @@ import AVILABLE_ROLES from "../constants/roles.constants.js";
 
 class MemberWorkspaceService {
     async getWorkspaces(user_id) {
-        //traer la lista de espacios de trabajo relacionados a el usuario logueado
-        const workspacesList = await memberWorkspaceRepository.getWorkspaceListByUserId(user_id)
-        return workspacesList
+
+        const member = await memberWorkspaceRepository.getByUserId(user_id)
+        if (member && member.acceptInvitation === 'accepted') {
+
+            //traer la lista de espacios de trabajo relacionados a el usuario logueado
+            const workspacesList = await memberWorkspaceRepository.getWorkspaceListByUserId(user_id)
+            return workspacesList
+        }
     }
 
     async create(workspace_id, user_id, role) {

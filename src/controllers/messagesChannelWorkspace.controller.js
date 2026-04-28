@@ -5,13 +5,16 @@ class MessagesChannelWorkspaceController {
         try {
             const { content } = request.body
             const { workspace_id, channel_id } = request.params
-            const user_id = request.user.id
+            // El middleware verifyMemberWorkspace ya verificó que el usuario
+            // pertenece al workspace y guardó el documento MemberWorkspace en request.member.
+            // Usamos su _id como FK para que el populate funcione correctamente.
+            const member_id = request.member._id
 
             if (!workspace_id) {
                 throw new Error('No se envio el id del espacio de trabajo')
             }
 
-            if (!user_id) {
+            if (!member_id) {
                 throw new Error('No se envio el id del miembro')
             }
 
@@ -19,7 +22,7 @@ class MessagesChannelWorkspaceController {
                 throw new Error('No se envio el id del canal')
             }
 
-            const message_created = await messagesChannelWorkspaceService.create(content, user_id, channel_id)
+            const message_created = await messagesChannelWorkspaceService.create(content, member_id, channel_id)
             return response.status(201).json({
                 message: 'Mensaje creado correctamente',
                 ok: true,
@@ -52,8 +55,9 @@ class MessagesChannelWorkspaceController {
     async deleteMessage(request, response, next) {
         try {
             const message_id = request.params.message_id
+            const user_id = request.user.id
 
-            const message_deleted = await messagesChannelWorkspaceService.deleteMessage(message_id)
+            const message_deleted = await messagesChannelWorkspaceService.deleteMessage(message_id, user_id)
             return response.status(200).json({
                 message: 'Mensaje eliminado correctamente',
                 ok: true,

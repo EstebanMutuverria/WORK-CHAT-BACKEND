@@ -229,6 +229,15 @@ class MemberWorkspacerepository {
             repositoryErrorHandler(error)
         }
     }
+
+    async getByUserId(user_id) {
+        try {
+            const member = await MemberWorkspace.findOne({ fk_id_user: user_id })
+            return member
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
+    }
 }
 
 /**

@@ -20,10 +20,12 @@ const messageChannelSchema = new mongoose.Schema({
     },
     fk_id_member: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'MemberWorkspace',
         required: true
     },
     fk_id_channel: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'ChannelWorkspace',
         required: true
     },
     created_at: {

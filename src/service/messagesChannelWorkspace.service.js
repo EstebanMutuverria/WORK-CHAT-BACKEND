@@ -26,13 +26,22 @@ class MessagesChannelWorkspaceService {
         return messages
     }
 
-    async deleteMessage(id) {
+    async deleteMessage(id, user_id) {
         if (!id) {
             throw new ServerError('El id del mensaje es requerido', 400)
         }
 
-        const message = await messageChannelRepository.deleteById(id)
-        return message
+        const message = await messageChannelRepository.getById(id)
+        if (!message) {
+            throw new ServerError('No se encontro el mensaje', 404)
+        }
+
+        if (message.fk_id_member.fk_id_user.toString() !== user_id.toString()) {
+            throw new ServerError('No tienes permisos para eliminar este mensaje', 403)
+        }
+
+        const messageDeleted = await messageChannelRepository.deleteById(id)
+        return messageDeleted
     }
 
     async deleteMessageLogic(id) {
