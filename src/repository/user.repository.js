@@ -71,16 +71,11 @@ class UserRepository {
      * @param {Object} new_props - Objeto con las propiedades a modificar.
      * @returns {Promise<Object>} El documento del usuario una vez aplicado el cambio.
      */
-    async updateById(id, new_props) {
+    async updateById(id, name) {
         try {
-            const new_user = await User.findByIdAndUpdate
-                (
-                    id,
-                    new_props,
-                    { returnDocument: 'after' }
-                )
+            const user_updated = await User.findByIdAndUpdate(id, { user_name: name }, { new: true })
 
-            return new_user
+            return user_updated
         } catch (error) {
             repositoryErrorHandler(error)
         }

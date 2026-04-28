@@ -14,6 +14,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
 import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.route.js";
 import workspacesRouter from "./routes/workspaces.route.js";
+import userRouter from "./routes/user.route.js";
 
 
 
@@ -53,6 +54,7 @@ const startServer = async () => {
         app.use('/api/workspaces/:workspace_id/channels', channelWorkspaceRouter);
         app.use('/api/workspaces/:workspace_id/channels/:channel_id', messagesChannelWorkspaceRouter);
         app.use('/api/workspaces/:workspace_id/members', memberWorkspacesRouter);
+        app.use('/api/user', userRouter);
 
         // Manejo de errores
         app.use(errorHandler);
