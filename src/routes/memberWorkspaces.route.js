@@ -29,7 +29,7 @@ memberWorkspacesRouter.get(
 memberWorkspacesRouter.delete(
     '/:member_id',
     authMiddleware,
-    verifyMemberWorkspace([AVILABLE_ROLES.OWNER, AVILABLE_ROLES.ADMIN]),
+    verifyMemberWorkspace([]),
     memberWorkspaceController.delete
 )
 

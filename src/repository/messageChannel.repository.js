@@ -5,6 +5,7 @@
 
 import MessageChannel from "../models/messageChannel.model.js";
 import { repositoryErrorHandler } from "../middlewares/errorHandler.js";
+import channelWorkspaceRepository from "./channelWorkspace.repository.js";
 
 /**
  * @class MessageChannelRepository
@@ -101,6 +102,14 @@ class MessageChannelRepository {
         try {
             const message_deleted = await MessageChannel.findByIdAndUpdate(id, { is_active: false }, { new: true })
             return message_deleted
+        } catch (error) {
+            repositoryErrorHandler(error)
+        }
+    }
+
+    async deleteByChannelId(id_channel) {
+        try {
+            await MessageChannel.deleteMany({ fk_id_channel: id_channel })
         } catch (error) {
             repositoryErrorHandler(error)
         }

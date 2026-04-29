@@ -68,12 +68,12 @@ class UserRepository {
      * @function updateById
      * @description Actualiza las propiedades de un usuario mediante su ID.
      * @param {string} id - El ID del usuario a modificar.
-     * @param {Object} new_props - Objeto con las propiedades a modificar.
+     * @param {Object} update_data - Objeto con las propiedades a modificar.
      * @returns {Promise<Object>} El documento del usuario una vez aplicado el cambio.
      */
-    async updateById(id, name) {
+    async updateById(id, update_data) {
         try {
-            const user_updated = await User.findByIdAndUpdate(id, { user_name: name }, { new: true })
+            const user_updated = await User.findByIdAndUpdate(id, update_data, { new: true })
 
             return user_updated
         } catch (error) {

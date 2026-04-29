@@ -2,6 +2,7 @@ import ServerError from "../helper/serverError.helper.js";
 import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
 import workspaceRepository from "../repository/workspace.repository.js";
 import userRepository from "../repository/user.repository.js";
+import workspaceService from "./workspace.service.js";
 import jwt from "jsonwebtoken";
 import ENVIRONMENT from "../config/environment.config.js";
 import mailerTransporter from "../config/malier.confing.js";
@@ -121,19 +122,61 @@ class MemberWorkspaceService {
         }
     }
 
-    async delete(workspace_id, member_id) {
+    async delete(workspace_id, member_id, requester_member) {
         if (!workspace_id) {
             throw new ServerError('No se especifico un espacio de trabajo', 404)
         }
         if (!member_id) {
-            throw new ServerError('No se especifico un miembro del espacio de trabajo')
+            throw new ServerError('No se especifico un miembro del espacio de trabajo', 400)
         }
 
-        const member = await memberWorkspaceRepository.getById(member_id)
-        if (member.role === AVILABLE_ROLES.OWNER) {
-            throw new ServerError('No se puede eliminar al dueño del espacio de trabajo. Primero debes transferir la propiedad si deseas retirarte.', 403)
+        const member_to_delete = await memberWorkspaceRepository.getById(member_id)
+        if (!member_to_delete) {
+            throw new ServerError('No se encontró el miembro especificado', 404)
         }
 
+        // Validación de permisos:
+        // Si hay un requester_member, validamos que tenga permiso para eliminar
+        if (requester_member) {
+            const isDeletingSelf = requester_member._id.toString() === member_to_delete._id.toString()
+            const isRequesterAdminOrOwner = requester_member.role === AVILABLE_ROLES.OWNER || requester_member.role === AVILABLE_ROLES.ADMIN
+
+            if (!isDeletingSelf && !isRequesterAdminOrOwner) {
+                throw new ServerError('No tienes permiso para eliminar a este miembro', 403)
+            }
+        }
+
+        if (member_to_delete.role === AVILABLE_ROLES.OWNER) {
+            // 1. Obtener todos los miembros del espacio de trabajo
+            const members = await memberWorkspaceRepository.getMemberList(workspace_id)
+            
+            // 2. Filtrar al dueño actual
+            const otherMembers = members.filter(m => m.user_id.toString() !== member_to_delete.fk_id_user.toString())
+
+            if (otherMembers.length === 0) {
+                // Si no hay más miembros, eliminamos el workspace completo
+                await workspaceService.deleteById(workspace_id)
+                return { status: 200, message: 'Espacio de trabajo eliminado correctamente al ser el único miembro' }
+            } else {
+                // 3. Buscar candidatos para nuevo owner (Administrador más antiguo > Usuario más antiguo)
+                let newOwner = otherMembers
+                    .filter(m => m.member_role === AVILABLE_ROLES.ADMIN)
+                    .sort((a, b) => new Date(a.member_created_at) - new Date(b.member_created_at))[0]
+
+                if (!newOwner) {
+                    newOwner = otherMembers
+                        .filter(m => m.member_role === AVILABLE_ROLES.USER)
+                        .sort((a, b) => new Date(a.member_created_at) - new Date(b.member_created_at))[0]
+                }
+
+                if (newOwner) {
+                    // 4. Transferir rol de owner al nuevo candidato
+                    await memberWorkspaceRepository.updateRole(newOwner.member_id, AVILABLE_ROLES.OWNER)
+                }
+            }
+        }
+
+        // 5. Eliminar la membresía del usuario (sea owner o no)
         const member_deleted = await memberWorkspaceRepository.deleteById(member_id)
         return member_deleted
     }

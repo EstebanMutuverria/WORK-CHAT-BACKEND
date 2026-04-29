@@ -110,7 +110,7 @@ class MemberWorkspacerepository {
      */
     async updateRole(id, role) {
         try {
-            const member_updated = await MemberWorkspace.findByIdAndUpdate(id, { role: role }, { new: true })
+            const member_updated = await MemberWorkspace.findByIdAndUpdate(id, { role: role }, { returnDocument: 'after' })
             return member_updated
         } catch (error) {
             repositoryErrorHandler(error)
@@ -171,6 +171,7 @@ class MemberWorkspacerepository {
                         workspace_description: workspace.fk_id_workspace?.description || '',
                         workspace_image: workspace.fk_id_workspace?.url_image || '',
                         workspace_role: workspace.role,
+                        member_id: workspace._id,
                         user_name: workspace.fk_id_user?.user_name || 'Usuario desconocido',
                         user_email: workspace.fk_id_user?.email || 'N/A'
                     }

@@ -10,5 +10,11 @@ userRouter.put(
     userController.updateById
 )
 
+userRouter.delete(
+    '/:user_id',
+    authMiddleware,
+    userController.deleteById
+)
+
 
 export default userRouter

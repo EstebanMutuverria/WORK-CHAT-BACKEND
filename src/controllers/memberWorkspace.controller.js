@@ -78,8 +78,9 @@ class MemberWorkspaceController {
         try {
             const member_id = request.params.member_id
             const workspace_id = request.params.workspace_id
+            const requester_member = request.member
 
-            const member_deleted = await memberWorkspaceService.delete(workspace_id, member_id)
+            const member_deleted = await memberWorkspaceService.delete(workspace_id, member_id, requester_member)
             return response.status(200).json(
                 {
                     message: 'Miembro eliminado correctamente',

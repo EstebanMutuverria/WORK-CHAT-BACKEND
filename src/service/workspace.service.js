@@ -1,6 +1,7 @@
 import ServerError from "../helper/serverError.helper.js";
 import channelWorkspaceRepository from "../repository/channelWorkspace.repository.js";
 import memberWorkspaceRepository from "../repository/memberWorkspace.repository.js";
+import messageChannelRepository from "../repository/messageChannel.repository.js";
 import workspaceRepository from "../repository/workspace.repository.js";
 import memberWorkspaceService from "./memberWorkspace.service.js";
 
@@ -14,6 +15,12 @@ class WorkspaceService {
             workspace_created._id,
             user_id,
             'owner'
+        )
+
+        await channelWorkspaceRepository.create(
+            workspace_created._id,
+            'General',
+            'Canal general del espacio de trabajo'
         )
         return workspace_created
     }
@@ -57,8 +64,16 @@ class WorkspaceService {
         // 2. Eliminación en cascada: Borrar miembros asociados
         await memberWorkspaceRepository.deleteByWorkspaceId(workspace_id)
 
-        // 3. Eliminación en cascada: Borrar canales asociados
+        // 3. Eliminación en cascada: Borrar mensajes asociados
+        const channels = await channelWorkspaceRepository.getAll(workspace_id)
+
+        for (const channel of channels) {
+            await messageChannelRepository.deleteByChannelId(channel._id)
+        }
+
+        // 4. Eliminación en cascada: Borrar canales asociados
         await channelWorkspaceRepository.deleteByWorkspaceId(workspace_id)
+
 
         return workspace_deleted
     }

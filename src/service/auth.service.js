@@ -138,13 +138,6 @@ class AuthService {
                 throw error
             }
         }
-
-        if (!token_verified) {
-            throw new ServerError('Token invalido', 400)
-        }
-
-        userRepository.updateById({ email_verified })
-        console.log('El usuario intento verificar su email, token de validacion: ' + verify_email_token)
     }
 
     /**
