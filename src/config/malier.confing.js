@@ -19,6 +19,8 @@ const mailerTransporter = nodemailer.createTransport({
         user: ENVIRONMENT.MAIL_USER,
         pass: ENVIRONMENT.MAIL_PASSWORD,
     },
+    // Forzamos IPv4 para evitar errores de red en Render
+    family: 4, 
     connectionTimeout: 5000,
     greetingTimeout: 5000,
     socketTimeout: 10000,
