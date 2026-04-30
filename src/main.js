@@ -35,8 +35,10 @@ const startServer = async () => {
                     ENVIRONMENT.URL_FRONTEND_DEPLOYED,
                     ENVIRONMENT.URL_BACKEND
                 ],
-                methods: ["GET", "POST"]
-            }
+                methods: ["GET", "POST"],
+                credentials: true
+            },
+            transports: ['websocket']
         });
 
         // Hacer que io sea accesible desde los controladores
