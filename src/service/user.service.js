@@ -4,6 +4,8 @@ import userRepository from "../repository/user.repository.js"
 import AVILABLE_ROLES from "../constants/roles.constants.js"
 import workspaceService from "./workspace.service.js"
 import memberWorkspaceService from "./memberWorkspace.service.js"
+import jwt from "jsonwebtoken"
+import ENVIRONMENT from "../config/environment.config.js"
 
 class UserService {
     async updateById(id, name) {
@@ -11,7 +13,26 @@ class UserService {
             throw new ServerError('El nombre es requerido', 400)
         }
         const user_updated = await userRepository.updateById(id, { user_name: name })
-        return user_updated
+        
+        if (!user_updated) {
+            throw new ServerError('Usuario no encontrado', 404)
+        }
+
+        // Generar un nuevo token con el nombre actualizado
+        const auth_token = jwt.sign(
+            {
+                email: user_updated.email,
+                name: user_updated.user_name,
+                created_at: user_updated.created_at,
+                id: user_updated._id
+            },
+            ENVIRONMENT.JWT_SECRET_KEY
+        )
+
+        return {
+            user: user_updated,
+            auth_token
+        }
     }
 
     async deleteById(id) {

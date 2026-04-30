@@ -29,7 +29,15 @@ class MessageChannelRepository {
                 fk_id_member: fk_id_member,
                 fk_id_channel: fk_id_channel
             })
-            return message
+            // Poblamos para que el frontend reciba la info del usuario inmediatamente por socket
+            const populatedMessage = await MessageChannel.findById(message._id).populate({
+                path: 'fk_id_member',
+                populate: {
+                    path: 'fk_id_user',
+                    select: 'user_name'
+                }
+            })
+            return populatedMessage
         } catch (error) {
             repositoryErrorHandler(error)
         }

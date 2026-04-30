@@ -15,8 +15,8 @@ import channelWorkspaceRouter from "./routes/channelsWorkspace.route.js";
 import messagesChannelWorkspaceRouter from "./routes/messagesChannelWorkspace.route.js";
 import workspacesRouter from "./routes/workspaces.route.js";
 import userRouter from "./routes/user.route.js";
-
-
+import http from 'http';
+import { Server } from 'socket.io';
 
 // Inicializa la conexión con MongoDB y luego inicia el servidor
 const startServer = async () => {
@@ -25,6 +25,36 @@ const startServer = async () => {
 
         // Inicializa la aplicación de Express
         const app = express();
+        const server = http.createServer(app);
+
+        // Inicializa Socket.io
+        const io = new Server(server, {
+            cors: {
+                origin: [
+                    ENVIRONMENT.URL_FRONTEND,
+                    ENVIRONMENT.URL_FRONTEND_DEPLOYED,
+                    ENVIRONMENT.URL_BACKEND
+                ],
+                methods: ["GET", "POST"]
+            }
+        });
+
+        // Hacer que io sea accesible desde los controladores
+        app.set('socketio', io);
+
+        // Configuración de Socket.io
+        io.on('connection', (socket) => {
+            console.log('Nuevo usuario conectado:', socket.id);
+
+            socket.on('join_channel', (channelId) => {
+                socket.join(channelId);
+                console.log(`Usuario ${socket.id} se unió al canal: ${channelId}`);
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Usuario desconectado:', socket.id);
+            });
+        });
 
         // CORS
         const allowedOrigins = [
@@ -59,7 +89,7 @@ const startServer = async () => {
         // Manejo de errores
         app.use(errorHandler);
 
-        app.listen(ENVIRONMENT.PORT, () => {
+        server.listen(ENVIRONMENT.PORT, () => {
             console.log('El servidor está corriendo en el puerto: ' + ENVIRONMENT.PORT);
         });
     } catch (error) {
