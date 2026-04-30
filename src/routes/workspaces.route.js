@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Definición de las rutas relacionadas con los Espacios de Trabajo (Workspaces).
+ */
+
 import express from 'express'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import workspacesController from '../controllers/workspace.controller.js'
@@ -7,7 +11,11 @@ import AVILABLE_ROLES from '../constants/roles.constants.js'
 
 const workspacesRouter = express.Router()
 
-//Crea un espacio de trabajo.
+/**
+ * @route POST /api/workspaces
+ * @description Crea un nuevo espacio de trabajo.
+ * @access Private
+ */
 workspacesRouter.post(
     '/',
     authMiddleware,
@@ -15,14 +23,22 @@ workspacesRouter.post(
     workspacesController.createWorkspace
 )
 
-//Obtiene la lista de los espacios de trabajo 
+/**
+ * @route GET /api/workspaces
+ * @description Obtiene la lista de todos los espacios de trabajo donde el usuario es miembro.
+ * @access Private
+ */
 workspacesRouter.get(
     '/',
     authMiddleware,
     workspacesController.getWorkspaces
 )
 
-//Obtine un espacio de trabajo por su ID para poder tener la vista de este espacio de trabajo y sus miembros. 
+/**
+ * @route GET /api/workspaces/:workspace_id
+ * @description Obtiene un espacio de trabajo por su ID para visualizar sus detalles y miembros.
+ * @access Private
+ */
 workspacesRouter.get(
     '/:workspace_id',
     authMiddleware,
@@ -39,7 +55,11 @@ workspacesRouter.put(
 )
     */
 
-//Elimina fisicamente un espacio de trabajo
+/**
+ * @route DELETE /api/workspaces/:workspace_id
+ * @description Elimina físicamente un espacio de trabajo (solo para OWNERs).
+ * @access Private
+ */
 workspacesRouter.delete(
     '/:workspace_id',
     authMiddleware,
@@ -47,7 +67,11 @@ workspacesRouter.delete(
     workspacesController.deleteById
 )
 
-//Actualiza un espacio de trabajo
+/**
+ * @route PUT /api/workspaces/:workspace_id
+ * @description Actualiza la información de un espacio de trabajo (solo para OWNERs).
+ * @access Private
+ */
 workspacesRouter.put(
     '/:workspace_id',
     authMiddleware,

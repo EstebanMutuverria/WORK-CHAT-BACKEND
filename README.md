@@ -10,7 +10,7 @@ Este proyecto es el backend de una aplicación estilo "Slack", desarrollada como
 - **Mongoose**: ODM (Object Data Modeling) para modelar los esquemas de la base de datos de MongoDB.
 - **JSON Web Token (JWT)**: Manejo de autenticación, autorización y reseteo de contraseñas de manera segura y sin estado (stateless).
 - **Bcrypt**: Encriptación de contraseñas antes de guardarlas en la base de datos.
-- **Nodemailer**: Envío de correos electrónicos (verificación de cuentas, reseteo de contraseñas).
+- **Nodemailer**: Envío de correos electrónicos (verificación de cuentas, reseteo de contraseñas, invitaciones a nuevos espacios de trabajo).
 - **Dotenv**: Carga de variables de entorno desde un archivo `.env`.
 
 ## Estructura del Proyecto
@@ -20,8 +20,10 @@ El código fuente está estructurado de acuerdo al patrón de diseño de arquite
 ```text
 src/
 ├── config/              # Configuraciones de entorno, MongoDB y Nodemailer
+├── constants/           # Constantes globales del proyecto (Roles, Estados, etc)
 ├── controllers/         # Controladores (procesan las peticiones y devuelven respuestas HTTP)
-├── helper/              # Clases de ayuda, manejo de errores personalizados (ServerError)
+├── helpers/             # Clases de ayuda, manejo de errores personalizados (ServerError)
+├── middlewares/         # Middlewares (Funciones que se ejecutan antes de los controladores)
 ├── models/              # Modelos de Mongoose (Esquemas de la Base de Datos)
 ├── repository/          # Repositorios (Capa de abstracción que interactúa con Mongoose)
 ├── routes/              # Definición de rutas y endpoints de Express
@@ -74,10 +76,36 @@ La API cuenta con las siguientes rutas base documentadas también en línea medi
 - **`POST /reset-password-request`**: Genera una solicitud de recuperación de clave y manda un correo. Requiere el `email`.
 - **`POST /reset-password/:reset_token`**: Guarda la nueva `password` verificando el token en el enlace.
 
-### Estado (`/api/health`)
-- **`GET /`**: Devuelve estado de vida de la API.
-- **`GET /database`**: Realiza una pequeña consulta en base de datos para asegurar el vínculo.
+### Usuarios (`/api/users`)
+- **`PUT /:user_id`**: Actualiza la información (como el nombre) de un usuario por su ID.
+- **`DELETE /:user_id`**: Elimina una cuenta de usuario por su ID.
+
+### Espacios de Trabajo (`/api/workspaces`)
+- **`POST /`**: Crea un nuevo espacio de trabajo. Permite subir una imagen como logo.
+- **`GET /`**: Obtiene la lista de todos los espacios de trabajo a los que pertenece el usuario autenticado.
+- **`GET /:workspace_id`**: Obtiene los detalles de un espacio de trabajo específico por su ID.
+- **`PUT /:workspace_id`**: Actualiza la información de un espacio de trabajo (solo accesible por el creador u Owner). Permite actualizar la imagen.
+- **`DELETE /:workspace_id`**: Elimina físicamente un espacio de trabajo (solo accesible por el creador u Owner).
+
+### Miembros del Workspace (`/api/workspaces/:workspace_id/members`)
+- **`POST /invite`**: Envía una invitación a un usuario para unirse al espacio de trabajo. (Solo Owner y Admin).
+- **`GET /`**: Endpoint que procesa la respuesta a una invitación (aceptar/rechazar) enviada por correo.
+- **`GET /memberList`**: Obtiene la lista completa de miembros pertenecientes al espacio de trabajo.
+- **`GET /:member_id`**: Obtiene información detallada de un miembro en específico.
+- **`PUT /:member_id`**: Actualiza el rol de un miembro (solo Owner o Admin).
+- **`DELETE /:member_id`**: Elimina a un miembro del espacio de trabajo (solo Owner).
+
+### Canales (`/api/workspaces/:workspace_id/channels`)
+- **`POST /`**: Crea un nuevo canal de texto dentro del espacio de trabajo. (Solo Owner y Admin).
+- **`GET /`**: Obtiene todos los canales del espacio de trabajo.
+- **`PUT /:channel_id`**: Actualiza el nombre u otros detalles del canal. (Solo Owner y Admin).
+- **`DELETE /:channel_id`**: Elimina un canal. (Solo Owner).
+
+### Mensajes (`/api/workspaces/:workspace_id/channels/:channel_id/message`)
+- **`POST /`**: Crea y envía un nuevo mensaje en un canal.
+- **`GET /`**: Obtiene todos los mensajes de un canal específico.
+- **`DELETE /:message_id`**: Elimina físicamente un mensaje del canal.
 
 ## Documentación del Código
 
-Todo el código fuente en la carpeta `src` está completamente documentado utilizando convenciones estándar de **JSDoc**. Esto permite que la base de código sea descriptiva y genere hints en la gran mayoría de IDEs (como VS Code) al sobrevolar métodos, parámetros o clases, explicando detalladamente responsabilidades en cada bloque.
+Todo el código fuente en la carpeta `src` está documentado utilizando convenciones estándar de **JSDoc**. Esto permite que la base de código sea descriptiva y genere hints en la gran mayoría de IDEs (como VS Code) al sobrevolar métodos, parámetros o clases, explicando detalladamente responsabilidades en cada bloque.
