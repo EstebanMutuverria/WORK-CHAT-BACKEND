@@ -6,7 +6,7 @@
 //Responsanilidad de manejar la capa de negocio
 
 import ENVIRONMENT from "../config/environment.config.js"
-import resendClient from "../config/malier.confing.js"
+import mailerTransporter from "../config/malier.confing.js"
 import ServerError from "../helper/serverError.helper.js"
 import userRepository from "../repository/user.repository.js"
 import jwt from "jsonwebtoken"
@@ -51,7 +51,7 @@ class AuthService {
 
         const passwordHashed = await bcrypt.hash(password, 12)
         const userCreated = await userRepository.create(user_name, passwordHashed, email)
-        this.sendVerifyEmail({ email, user_name })
+        await this.sendVerifyEmail({ email, user_name })
     }
 
     /**
@@ -163,8 +163,8 @@ class AuthService {
 
         const verificationURL = `${ENVIRONMENT.URL_BACKEND}/api/auth/verify-email?verify_email_token=${verify_email_token}`;
 
-        await resendClient.emails.send({
-            from: 'WorkChat <onboarding@resend.dev>',
+        await mailerTransporter.sendMail({
+            from: ENVIRONMENT.MAIL_USER,
             to: email,
             subject: `Bienvenido ${user_name}, verifica tu cuenta`,
             html: getEmailTemplate(
@@ -207,8 +207,8 @@ class AuthService {
 
         const resetURL = `${ENVIRONMENT.URL_BACKEND}/api/auth/reset-password/${resetPasswordToken}`;
 
-        await resendClient.emails.send({
-            from: 'WorkChat <onboarding@resend.dev>',
+        await mailerTransporter.sendMail({
+            from: ENVIRONMENT.MAIL_USER,
             to: email,
             subject: 'Restablecimiento de contraseña - WorkChat',
             html: getEmailTemplate(

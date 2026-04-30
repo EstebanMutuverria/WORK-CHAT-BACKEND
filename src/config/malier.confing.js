@@ -1,16 +1,22 @@
 /**
  * @fileoverview Configuración del servicio de envío de correos electrónicos.
- * Utiliza la API HTTP de Resend para enviar correos, evitando las restricciones
- * de puertos SMTP en entornos de hosting como Render.
+ * Utiliza nodemailer para crear un transportador configurado con las credenciales de entorno.
  */
 
-import { Resend } from 'resend';
+import nodemailer from "nodemailer";
 import ENVIRONMENT from "./environment.config.js";
 
 /**
- * @constant {Resend} resendClient
- * @description Instancia del cliente de Resend configurada con la API Key del entorno.
+ * @constant {Object} mailerTransporter
+ * @description Instancia de nodemailer configurada para enviar correos usando el servicio de Gmail.
+ * Las credenciales de autenticación se obtienen del objeto ENVIRONMENT definido globalmente.
  */
-const resendClient = new Resend(ENVIRONMENT.RESEND_API_KEY);
+const mailerTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: ENVIRONMENT.MAIL_USER,
+        pass: ENVIRONMENT.MAIL_PASSWORD,
+    },
+});
 
-export default resendClient;
+export default mailerTransporter;

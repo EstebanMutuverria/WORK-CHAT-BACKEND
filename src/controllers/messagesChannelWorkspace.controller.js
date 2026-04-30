@@ -24,10 +24,6 @@ class MessagesChannelWorkspaceController {
 
             const message_created = await messagesChannelWorkspaceService.create(content, member_id, channel_id)
             
-            // Obtener la instancia de socketio y emitir el mensaje al canal
-            const io = request.app.get('socketio');
-            io.to(channel_id).emit('new_message', message_created);
-
             return response.status(201).json({
                 message: 'Mensaje creado correctamente',
                 ok: true,
