@@ -29,14 +29,6 @@ messagesChannelWorkspaceRouter.delete(
     messagesChannelWorkspaceController.deleteMessage
 )
 
-messagesChannelWorkspaceRouter.put(
-    '/message/:message_id',
-    authMiddleware,
-    verifyChannelMiddleware,
-    verifyMemberWorkspace([]),
-    messagesChannelWorkspaceController.deleteMessageLogic
-)
-
 export default messagesChannelWorkspaceRouter
 
 
