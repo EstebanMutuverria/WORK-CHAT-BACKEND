@@ -12,21 +12,16 @@ import ENVIRONMENT from "./environment.config.js";
  * Las credenciales de autenticación se obtienen del objeto ENVIRONMENT definido globalmente.
  */
 const mailerTransporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // true para 465, false para otros puertos (como 587)
+    host: "smtp.googlemail.com",
+    port: 465,
+    secure: true,
     auth: {
         user: ENVIRONMENT.MAIL_USER,
         pass: ENVIRONMENT.MAIL_PASSWORD,
     },
-    // Ajustes para evitar problemas de conexión y DNS en Render
-    connectionTimeout: 10000, // 10 segundos
-    greetingTimeout: 10000,
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
     socketTimeout: 10000,
-    tls: {
-        rejectUnauthorized: false,
-        ciphers: 'SSLv3'
-    }
 });
 
 export default mailerTransporter

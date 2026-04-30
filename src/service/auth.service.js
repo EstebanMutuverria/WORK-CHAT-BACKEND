@@ -51,7 +51,7 @@ class AuthService {
 
         const passwordHashed = await bcrypt.hash(password, 12)
         const userCreated = await userRepository.create(user_name, passwordHashed, email)
-        await this.sendVerifyEmail({ email, user_name })
+        this.sendVerifyEmail({ email, user_name })
     }
 
     /**
