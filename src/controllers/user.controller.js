@@ -1,12 +1,11 @@
-import ServerError from "../helper/serverError.helper.js"
 import userService from "../service/user.service.js"
 
 class UserController {
     async updateById(req, res, next) {
         try {
             const { user_id } = req.params
-            const { name } = req.body
-            const user_updated = await userService.updateById(user_id, name)
+            const { name, github, linkedin, twitter, instagram } = req.body
+            const user_updated = await userService.updateById(user_id, name, github, linkedin, twitter, instagram)
             return res.status(200).json({
                 status: 200,
                 ok: true,

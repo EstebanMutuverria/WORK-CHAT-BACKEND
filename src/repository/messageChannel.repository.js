@@ -22,12 +22,13 @@ class MessageChannelRepository {
      * @param {string} fk_id_channel - ID del canal donde se envía.
      * @returns {Promise<Object>}
      */
-    async create(content, fk_id_member, fk_id_channel) {
+    async create(content, fk_id_member, fk_id_channel, attachment = null) {
         try {
             const message = await MessageChannel.create({
                 content: content,
                 fk_id_member: fk_id_member,
-                fk_id_channel: fk_id_channel
+                fk_id_channel: fk_id_channel,
+                attachment: attachment
             })
             // Poblamos para que el frontend reciba la info del usuario inmediatamente por socket
             const populatedMessage = await MessageChannel.findById(message._id).populate({

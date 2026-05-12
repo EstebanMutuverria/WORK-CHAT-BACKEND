@@ -87,7 +87,11 @@ class AuthService {
                 email: user.email,
                 name: user.user_name,
                 created_at: user.created_at,
-                id: user._id
+                id: user._id,
+                github: user.github,
+                linkedin: user.linkedin,
+                twitter: user.twitter,
+                instagram: user.instagram
             },
             ENVIRONMENT.JWT_SECRET_KEY
         )

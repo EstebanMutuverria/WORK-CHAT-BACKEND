@@ -2,9 +2,9 @@ import ServerError from "../helper/serverError.helper.js"
 import messageChannelRepository from "../repository/messageChannel.repository.js"
 
 class MessagesChannelWorkspaceService {
-    async create(content, id_member, id_channel) {
-        if (!content) {
-            throw new ServerError('El contenido es requerido', 400)
+    async create(content, id_member, id_channel, attachment = null) {
+        if (!content && !attachment) {
+            throw new ServerError('El contenido o un archivo es requerido', 400)
         }
         if (!id_member) {
             throw new ServerError('El id del miembro es requerido', 400)
@@ -13,7 +13,7 @@ class MessagesChannelWorkspaceService {
             throw new ServerError('El id del canal es requerido', 400)
         }
 
-        const message = await messageChannelRepository.create(content, id_member, id_channel)
+        const message = await messageChannelRepository.create(content, id_member, id_channel, attachment)
         return message
     }
 

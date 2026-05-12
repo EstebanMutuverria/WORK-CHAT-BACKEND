@@ -3,6 +3,11 @@
  * Desde aquí se inicializa la conexión a la base de datos, los middleware globales, y se montan las rutas de Express.
 */
 
+// Fix: Forzar a Node.js a usar los DNS de Google para resolver registros SRV de MongoDB Atlas
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
 import ENVIRONMENT from "./config/environment.config.js";
 import { connectMongoDB } from "./config/mongoDB.config.js";
 import express from 'express'

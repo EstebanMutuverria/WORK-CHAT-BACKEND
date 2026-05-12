@@ -16,7 +16,9 @@ import mongoose from "mongoose";
 const messageChannelSchema = new mongoose.Schema({
     content: {
         type: String,
-        required: true
+        required: function() {
+            return !this.attachment;
+        }
     },
     fk_id_member: {
         type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +39,10 @@ const messageChannelSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
         required: true
+    },
+    attachment: {
+        type: String,
+        default: null
     }
 })
 

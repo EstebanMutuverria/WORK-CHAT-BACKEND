@@ -15,39 +15,64 @@ import mongoose from "mongoose";
  * @property {string} email - Correo electrónico del usuario, debe ser único y es requerido.
  * @property {boolean} email_verified - Indica si el email ha sido verificado. Por defecto false.
  * @property {string} url_image - URL de la imagen de perfil del usuario (opcional).
+ * @property {string} github - URL del perfil de github del usuario (opcional).
+ * @property {string} linkedin - URL del perfil de linkedin del usuario (opcional).
+ * @property {string} twitter - URL del perfil de twitter del usuario (opcional).
+ * @property {string} instagram - URL del perfil de instagram del usuario (opcional).
+ * @property {string} whatsapp - Número de whatsapp del usuario (opcional).
  */
 const userSchema = new mongoose.Schema(
     {
-        user_name:{
+        user_name: {
             type: String,
-            required:true,
-            unique:true
+            required: true,
+            unique: true
         },
-        password:{
+        password: {
             type: String,
-            required:true
+            required: true
         },
-        active:{
+        active: {
             type: Boolean,
             default: true
         },
-        created_at:{
-            type:Date,
+        created_at: {
+            type: Date,
             default: Date.now
         },
-        email:{
+        email: {
             type: String,
-            unique:true,
+            unique: true,
             required: true
         },
-        email_verified:{
-            type:Boolean,
-            default:false,
-            required:true
+        email_verified: {
+            type: Boolean,
+            default: false,
+            required: true
         },
-        url_image:{
+        url_image: {
             type: String,
-            required:false
+            required: false
+        },
+        github: {
+            type: String,
+            required: false,
+            default: null,
+        },
+        linkedin: {
+            type: String,
+            required: false,
+            default: null
+        },
+        twitter: {
+            type: String,
+            required: false,
+            default: null
+        },
+        instagram: {
+            type: String,
+            required: false,
+            default: null
         }
     }
 )

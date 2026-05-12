@@ -5,10 +5,10 @@ class MessagesChannelWorkspaceController {
         try {
             const { content } = request.body
             const { workspace_id, channel_id } = request.params
-            // El middleware verifyMemberWorkspace ya verificó que el usuario
-            // pertenece al workspace y guardó el documento MemberWorkspace en request.member.
-            // Usamos su _id como FK para que el populate funcione correctamente.
             const member_id = request.member._id
+            
+            // Con CloudinaryStorage, req.file.path ya es la URL segura de Cloudinary
+            const attachment = request.file ? request.file.path : null
 
             if (!workspace_id) {
                 throw new Error('No se envio el id del espacio de trabajo')
@@ -22,7 +22,7 @@ class MessagesChannelWorkspaceController {
                 throw new Error('No se envio el id del canal')
             }
 
-            const message_created = await messagesChannelWorkspaceService.create(content, member_id, channel_id)
+            const message_created = await messagesChannelWorkspaceService.create(content, member_id, channel_id, attachment)
             
             return response.status(201).json({
                 message: 'Mensaje creado correctamente',
